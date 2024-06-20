@@ -1,0 +1,29 @@
+.ju367vck,.ju367va2{
+    background: none!important;
+    border-color: none!important;
+}
+
+.ju367vb5,.ju367vck{
+    background-color: none!important;
+    border: none!important;
+}
+
+.bg-sell{
+    width: 343px;
+    height: 343px;
+    background: linear-gradient( 123deg, #1EFF8B 0%, #00C2AA 92%);
+    border-radius: 0px 0px 0px 0px;
+    filter: blur(151.5180206298828px);
+    position: fixed;
+    top: 0;
+    right: -50%;
+    transform: translate(0,-50%);
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.select-lang{
+    background: linear-gradient( 180deg, #2D5751 0%, #2F4D32 100%);
+    border: 1px solid rgba(34, 255, 224, 1);
+    border-radius: 10px;
+}

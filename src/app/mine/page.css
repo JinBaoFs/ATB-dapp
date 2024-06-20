@@ -1,0 +1,66 @@
+.cash-btn{
+    width: 48%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    height: 48px;
+    background: linear-gradient( 90deg, #22FFE0 0%, #64FFA5 100%);
+    color: #2F5E4B;
+    font-weight: bold;
+}
+
+.total-number{
+    font-size: 26px;
+    font-weight: bold;
+    color: #22FFE0;
+}
+
+.cash-box{
+    position: relative;
+    overflow: hidden;
+}
+
+.record-btn{
+    cursor: pointer;
+    background: #A6BBB8;
+    border-radius: 10px;
+    color: #fff;
+    width: 48%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.sync-m-01{
+    width: 118px;
+    height: 118px;
+    background: linear-gradient( 131deg, #22FFE0 0%, #B2F001 100%);
+    border-radius: 0px 0px 0px 0px;
+    filter: blur(92.07917022705078px);
+    position: absolute;
+    bottom: 8px;
+    left: -20px;
+}
+
+.sync-m-02{
+    width: 92px;
+    height: 92px;
+    background: linear-gradient( 185deg, #22FFE0 0%, #FFF500 100%);
+    border-radius: 0px 0px 0px 0px;
+    filter: blur(51.44073486328125px);
+    position: absolute;
+    right: -5px;
+    top: -27px;
+}
+
+.line{
+    width: 100%;
+    height: 0px;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid;
+    border-image: linear-gradient(90deg, rgba(34, 255, 224, 0), rgba(34, 255, 224, 1), rgba(34, 255, 224, 0)) 1 1;
+}

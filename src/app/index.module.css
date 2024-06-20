@@ -1,0 +1,25 @@
+.box {
+	/* 我们不想看到超出盒子范围的图片，因此需要overflow：hidden；进行隐藏 */
+	overflow: hidden;
+	/* 子绝父相，对div盒子设置相对定位 */
+	position: relative;
+	width: 100vw;
+	margin: 100px auto;
+}
+.scrollBox{
+	/* width: 2000px; */
+	height: 150px;
+	animation: run 12s infinite linear;
+}
+
+
+@keyframes run {
+	0% {
+		transform: translateY(0);
+	}
+
+	100% {
+		/* 轮播宽度还是按照原来的7张图片进行设置 这样在播完7张图片后就会跳转回第一张*/
+		transform: translateY(-20rem);
+	}
+}
