@@ -248,87 +248,9 @@ export default function Home() {
   return (
     <article 
       className="h-auto overflow-scroll"
-      // style={{background:"linear-gradient(to bottom left, #42478c, rgb(29,33,81))"}}
+      style={{ overflowX: 'hidden' }}
     >
-      <Banner />
       <article className="w-full mt-4 px-4">
-        <div className="title">{t("index.slogen")}</div>
-        <div className="mt-5 grid grid-cols-2 gap-4">
-          <div className="flex flex-col p-[10px] rounded-[10px]" style={{background: "rgba(255,255,255,0.3)",position: "relative",overflow: "hidden"}}>
-            <span className="text-sm">{t("index.liq_node")}</span>
-            <span className="text-lg mt-3" style={{fontWeight: "bold"}}>
-              <CountUp start={0} end={(homeData?.node_number && Number(homeData?.node_number)) ? Number(homeData?.node_number) : 4615097} duration={2} />
-            </span>
-            {/* <div className="sync-01"></div>
-            <div className="sync-02"></div> */}
-          </div>
-          <div className="flex flex-col p-[10px] rounded-[10px]" style={{background: "rgba(255,255,255,0.3)",position: "relative",overflow: "hidden"}}>
-            <span className="text-sm">{t("index.liq_pool")}</span>
-            <span className="text-lg mt-3" style={{fontWeight: "bold"}}>
-              <CountUp start={0} end={(homeData?.pool_total && Number(homeData?.pool_total)) ? Number(homeData?.pool_total) : 376021075} duration={2} />
-            </span>
-            {/* <div className="sync-03"></div> */}
-          </div>
-          <div className="flex flex-col p-[10px] rounded-[10px]" style={{background: "rgba(255,255,255,0.3)",position: "relative",overflow: "hidden"}}>
-            <span className="text-sm">{t("index.participant")}</span>
-            <span className="text-lg mt-3" style={{fontWeight: "bold"}}>
-              <CountUp start={0} end={(homeData?.auth_number && Number(homeData?.auth_number)) ? Number(homeData?.auth_number) : 374476} duration={2} />
-            </span>
-            {/* <div className="sync-04"></div> */}
-          </div>
-          <div className="flex flex-col p-[10px] rounded-[10px]" style={{background: "rgba(255,255,255,0.3)",position: "relative",overflow: "hidden"}}>
-            <span className="text-sm">{t("index.income")}</span>
-            <span className="text-lg mt-3" style={{fontWeight: "bold"}}>
-              <CountUp start={0} end={(homeData?.income && Number(homeData?.income)) ? Number(homeData?.income) : 14982313} duration={2} />
-            </span>
-            {/* <div className="sync-05"></div> */}
-          </div>
-        </div>
-        {
-          !(backList.some((item:any)=>{return item.address == address})) &&
-          <div className="w-full flex justify-between mt-5">
-            <div 
-              style={{background: "linear-gradient( 90deg, #22FFE0 0%, #64FFA5 100%)", color: "#2F5E4B", fontWeight: "bold"}} 
-              className="text-center rounded-[10px] p-3 w-full my-auto cursor-pointer"
-              onClick={handleParticipate}
-            >
-              {t("index.now_join")}
-            </div>
-          </div>
-        }
-        
-        {
-          (address && isAllowed) &&
-          <div
-            className="cursor-pointer p-3 w-full text-[#2F5E4B] mt-5 text-center rounded-[10px] font-bold"
-            onClick={handlerAdvanced}
-            style={{background: "linear-gradient( 90deg, #6FE5FF 0%, #DBF057 100%)"}}
-          >
-            {t("index.add_height_ming")}
-          </div>
-        }
-        <div className="title mt-5">{t("index.user_mining_revenue")}</div>
-        <div className="my-5 p-0.5 rounded-xl bg-[rgba(255,255,255,0.1)]">
-          <div className="w-full p-4 rounded-xl m-auto">
-            <div className="flex justify-between text-[#fff]">
-              <span>{t("index.address")}</span>
-              <span>{t("index.value")}</span>
-            </div>
-            <div className="line mt-3"></div>
-            <div className="h-[20rem] overflow-hidden relative py-4 mt-5">
-              <ul className={classes.scrollBox}>
-                {[...revenueList, ...revenueList].map((item, index) => {
-                  return <li key={index} className="h-8 flex justify-between">
-                    <p className="text-sm text-white">{item.a}</p>
-                    <p className="text-sm text-white">{item.v}</p>
-                  </li>
-                })}
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="title mt-5">{t("index.fre_q")}</div> 
-        <Fna />
       </article>
       
       <Snackbar

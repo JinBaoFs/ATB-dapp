@@ -15,6 +15,8 @@ import POImg from "@images/locale/po.png"
 import LAImg from "@images/locale/la.png"
 import SELECTImg from "@images/select.png"
 import CLOSEImg from "@images/close.png"
+import LOGOIMG from "@images/logo.png"
+import MENUIMG from "@images/menu.png"
 import "./header.css"
 
 import { NextRouter } from 'next/router';
@@ -23,8 +25,17 @@ import { shortenString } from '@/lib/utils';
 import { useTranslation } from "react-i18next"
 import { InvalidAbiItemError } from 'viem';
 
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 interface IHeaderProps extends HTMLAttributes<HTMLDivElement> {
+}
+
+function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
 }
 
 
@@ -105,28 +116,58 @@ export default function Header({ }: IHeaderProps) {
         setMenuShow(false)
     }
 
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
     return (
-        <div className='h-16 flex fixed top-0 left-0 justify-between w-full px-5 z-50' 
-            style={{background: "linear-gradient( 90deg, #303231 0%, #2E5A4B 100%)",borderBottom: "1px rgba(255,255,255,0.8) solid"}}
-        >
+        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5 z-50'>
             <div className='m-auto navbar flex justify-between'>
                 <div 
-                    className='p-1 navbar-start w-fit bg-gradient-to-b bg-[#3474FB] rounded flex px-2'
-                    style={{background: "linear-gradient( 90deg, #22FFE0 0%, #64FFA5 100%)",color: "#2F5E4B", fontWeight: "bold", height: "35px",lineHeight: "35px"}}
+                    className='p-1 navbar-start w-fit rounded flex px-2'
+                    style={{color: "#fff", height: "35px",lineHeight: "35px"}}
                 >
-                    {
-                        !address ? <p className='rounded-full h-[22px] w-[22px] animate-spin border-t-white/10 border-white border-2 m-auto'></p>
-                            : <p className='px-4'>{shortenString(address)}</p>
-                    }
+                    <Image
+                        src={LOGOIMG}
+                        width={24}
+                        height={30}
+                        alt=''
+                        className="mr-[6px]"
+                    />
+                    <Image
+                        src={MENUIMG}
+                        width={18}
+                        height={18}
+                        alt=''
+                        className="sm:hidden"
+                    />
+                    <div className="hidden sm:flex">
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" sx={{
+                            '& .MuiTab-root': {
+                                color: '#fff',  // 设置选项卡文字颜色
+                            },
+                            '& .Mui-selected': {
+                                color: '#fff',  // 设置选中选项卡文字颜色
+                            },
+                            '& .MuiTabs-indicator': {
+                                backgroundColor: '#C52383',  // 设置选中指示器的颜色
+                            },
+                            '& .MuiTabs-indicatorSpan': {
+                                maxWidth: 40,
+                                width: '100%',
+                                backgroundColor: '#635ee7',
+                            },
+                        }}>
+                            <Tab label="首页" {...a11yProps(0)} />
+                            <Tab label="收益" {...a11yProps(1)} />
+                            <Tab label="我的ATB" {...a11yProps(2)} />
+                        </Tabs>
+                    </div>
                 </div>
                 <div className='navbar-end flex justify-end gap-3'>
-                    {
-                        !address ? <WallectButton /> : <ConnectButton accountStatus={{
-                            smallScreen: 'avatar',
-                            largeScreen: 'full',
-                          }} showBalance={false} />
-                    }
-                    <div className="dropdown dropdown-end flex justify-end">
+                <div className="dropdown dropdown-end flex justify-end">
                         <div tabIndex={0} className="rounded-[6px] flex p-[10px] justify-center text-right bg-[#FFFFFF26]" style={{width: "40px",height: "40px"}} onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }>
                             <Image
                                 src={localList[imgIndex].img}
@@ -179,42 +220,14 @@ export default function Header({ }: IHeaderProps) {
                                 </div>
                             </div>
                         }
-                        
-                        {/* <ul tabIndex={0} className="p-2 menu dropdown-content rounded shadow-lg shadow-black sm:w-auto bg-[#252525]">
-                        <li>
-                            <ul>
-                                {localList.map((locale) => {
-                                    const { pathname, query, asPath } = router
-                                    return (
-                                        <li key={locale.path} className='cursor-pointer'>
-                                            <Link
-                                                href={{ pathname, query }}
-                                                as={asPath}
-                                                // onClick={() => router.forward()}
-                                                locale={locale.path}
-                                                legacyBehavior
-                                            >
-                                                <div className='my-2 flex justify-start w-full'>
-                                                    <Image
-                                                        src={locale.img}
-                                                        width={20}
-                                                        height={13}
-                                                        alt=''
-                                                        className='mr-2 h-3 my-auto'
-                                                    />
-                                                    <p className='w-24'>
-                                                        {locale.text}
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </li>
-                    </ul> */}
-                        <div className="bg-sell"></div>
                     </div>
+                    {
+                        !address ? <WallectButton /> : <ConnectButton accountStatus={{
+                            smallScreen: 'avatar',
+                            largeScreen: 'full',
+                          }} showBalance={false} />
+                    }
+                    
                 </div>
             </div>
         </div>
