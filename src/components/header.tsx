@@ -165,7 +165,7 @@ export default function Header({ }: IHeaderProps) {
     }));
 
     return (
-        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5'>
+        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5' style={{zIndex: "100"}}>
             <div className='m-auto navbar flex justify-between'>
                 <div 
                     className='p-1 navbar-start w-fit rounded flex px-2'

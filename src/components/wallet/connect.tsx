@@ -6,10 +6,10 @@ export default function WallectButton() {
     return (
         <ConnectButton.Custom>
             {({ account, chain, openConnectModal, openChainModal, mounted }) => {
-                if(!isOnclick){
-                    isOnclick = true
-                    openConnectModal()
-                }
+                // if(!isOnclick){
+                //     isOnclick = true
+                //     openConnectModal()
+                // }
                 return (
                     <div
                         {...(!mounted && {

