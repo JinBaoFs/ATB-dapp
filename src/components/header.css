@@ -27,3 +27,22 @@
     border: 1px solid rgba(34, 255, 224, 1);
     border-radius: 10px;
 }
+
+.nav-list{
+    padding: 100px 60px;
+}
+
+.nav-list .nav-item{
+    display: flex;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+}
+
+.nav-list .nav-item img{
+    height: fit-content;
+}

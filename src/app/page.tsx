@@ -2,13 +2,8 @@
 import Image from "next/image";
 
 import classes from "./index.module.css";
+import HOMEIMG01 from "@images/home-01.png"
 import AddressIcon from "@images/icon/address.png"
-import InfoIcon from "@images/icon/info.png"
-import WalletIcon from "@images/icon/wallet.png"
-import StarIcon from "@images/icon/star.png"
-import PoolIcon from "@images/icon/pool.png"
-import PartIcon from "@images/icon/part.png"
-import IncomeIcon from "@images/icon/income.png"
 import { shortenString } from "@/lib/utils";
 import { useAccount, useNetwork } from "wagmi";
 import Fna from "@/components/fna";
@@ -19,7 +14,7 @@ import { useContractUserBalance, useGetUserInfo, userContractApprove, useContrac
 import React,{ useEffect, useState, useRef } from "react";
 import { postForm } from "node_modules/axios/index.cjs";
 import { getRequestExtract, postUserapproveAuth, getContractAddress, getHomeConfig, getBackList } from "@/server/user";
-import { Snackbar, Drawer } from "@mui/material";
+import { Snackbar, Drawer, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
@@ -34,8 +29,6 @@ export default function Home() {
   const { data, isLoading, approve, isSuccess, onSuccess, onError } = userContractApprove()
   const { userinfo } = useGetUserInfo()
   const { userBalance } = useContractUserBalance()
-  const [openDrawer, setOpenDrawer] = useState(false)
-  const [selectDays, setSelectDays] = useState(30)
   const [contractAddress, setContractAddress] = useState<any>("")
   const [backList,setBackList] = useState<any>([])
   const { isAllowed } = useContractUserAllowanceStatus(contractAddress || "0x070c9581ce99eedbc659d1a34569f1c548a08a1b")
@@ -45,87 +38,11 @@ export default function Home() {
     status: 0,
     msg: ''
   })
-  const [homeData,setHomeData] = useState<any>({})
   const [snackbarValue, setSnackbarValue] = useState({
     open: false,
     message: ""
   })
   const { chain } = useNetwork()
-  const revenueList = [{
-    a: "0xd9******967b",
-    v: "1487.32USDT"
-  }, {
-    a: "0x6f******4829",
-    v: "528.58USDT"
-  }, {
-    a: "0x8d******e55e",
-    v: "64594.46USDT"
-  }, {
-    a: "0x23******4412",
-    v: "44.59USDT"
-  }, {
-    a: "0x38******62a5",
-    v: "769.93USDT"
-  }, {
-    a: "0xA3******50F2",
-    v: "1487.32USDT"
-  }, {
-    a: "0xfa******2252",
-    v: "999.86USDT"
-  }, {
-    a: "0x72******9a09",
-    v: "9361.82USDT"
-  }, {
-    a: "0xf0******aa63",
-    v: "827.48USDT"
-  }, {
-    a: "0xF2******D69f",
-    v: "68.91USDT"
-  }, {
-    a: "0x93******c8f5",
-    v: "9168.85USDT"
-  }, {
-    a: "0x03******8ac0",
-    v: "748.37USDT"
-  }, {
-    a: "0xd7******0a0E",
-    v: "54.86USDT"
-  }, {
-    a: "0x20******452e",
-    v: "813.74USDT"
-  }, {
-    a: "0x1b******7042",
-    v: "88.47USDT"
-  }, {
-    a: "0xc4******98Ac",
-    v: "602.74USDT"
-  }, {
-    a: "0xeb******b826",
-    v: "58.79USDT"
-  }, {
-    a: "0xcc******b873",
-    v: "304.66USDT"
-  }, {
-    a: "0x78******8A1E",
-    v: "200.96USDT"
-  }, {
-    a: "0x73******5f18",
-    v: "470.70USDT"
-  }, {
-    a: "0xa5******4c0f",
-    v: "198.98USDT"
-  }, {
-    a: "0x83******e434",
-    v: "648.69USDT"
-  }, {
-    a: "0xd9******bd25",
-    v: "91.88USDT"
-  }, {
-    a: "0x6fe******482b",
-    v: "89.23USDT"
-  }]
-
-  const days = [7,14,30,60,90,180]
   useEffect(()=>{
     if(isSuccess){
       onSuccess(async () => {
@@ -148,20 +65,9 @@ export default function Home() {
 
   useEffect(() => {
     if(address){
-      handleGetAddress()
-      handleGetHomeConfig()
-      handleGetBackList()
     }
   }, [chain,address])
 
-  const handleGetHomeConfig = async () => {
-    try{
-      let { data, code } = await getHomeConfig({address,chain_type: chain?.id})
-      if(code == 200){
-        setHomeData(data)
-      }
-    }catch{}
-  }
 
   const handleGetBackList = async () => {
     let {data,code} = await getBackList({address})
@@ -211,46 +117,32 @@ export default function Home() {
     }
     setLoding(false)
   }
-  const handlerAdvanced = async () => {
-    setLoding(true)
-    const { data } = await getRequestExtract({ join_days: selectDays, address, chain_type: chain?.id })
-    // setSnackbarValue({
-    //   open: true,
-    //   message: "advanced success"
-    // })
-    if(data){
-      setAddData({
-        isShow: true,
-        title: t("index.add_height_ming"),
-        status: 0 ,
-        msg: t("index.successed")
-      })
-    }else{
-      setAddData({
-        isShow: true,
-        title: t("index.add_height_ming"),
-        status: 1,
-        msg: t("index.fail_auth")
-      })
-    }
-    setLoding(false)
-  }
 
-  // const handleAuthUser = async() => {
-  //   const params = new URLSearchParams(window.location.search);
-  //   const paramValue = params.get('c');
-  //   try{
-  //     const res = await postAuthUser({hash:paramValue})
-  //   }catch{
-  //     console.log("发展代理失败[handleAuthUser]")
-  //   }
-  // }
   return (
     <article 
-      className="h-auto overflow-scroll"
-      style={{ overflowX: 'hidden' }}
+      className="h-full"
+      style={{ overflowX: 'hidden',position: "relative", }}
     >
-      <article className="w-full mt-4 px-4">
+      <article className="w-full mt-[100px] px-10">
+        <Grid container className="w-full bg-[#131C20]">
+          <Grid item xs={12} lg={7} style={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+            <div className="px-[92px]">
+              <span className="text-[72px] font-bold"><span className="text-[#E1146E]">ATR</span>超算AI机器人</span>
+            </div>
+            <div className="px-[92px] py-[8px] bg-[rgba(0,0,0,0.5)]" style={{paddingRight: "20px"}}>
+              <span className="text-[28px] sm:text-[48px] font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span></span>
+              <span className="text-[30px]">(高额收益)</span>
+            </div>
+          </Grid>
+          <Grid item xs={12} lg={5}>
+            <Image
+                src={HOMEIMG01}
+                alt=''
+                className="w-full"
+                style={{height:"fit-content"}}
+            />
+          </Grid>
+        </Grid>
       </article>
       
       <Snackbar
@@ -266,38 +158,6 @@ export default function Home() {
         }}
         message={snackbarValue.message}
       />
-      <Notic />
-      <Drawer
-          anchor="bottom"
-          open={openDrawer}
-          onClose={() => setOpenDrawer(false)}
-          PaperProps={{
-              style: {
-                  backgroundColor: "#252525",
-                  borderRadius: "10px 10px 0px 0px",
-              },
-          }}
-          
-      >
-        <section className='w-full p-5 bg-[#1D2151]'>
-          <div className="text-center text-white text-xl mb-5">{t("index.select_days")}</div>
-          { days.map(item=>{
-            return (
-              <div className="flex justify-between rounded-[10px] mt-2 bg-[#24285B]" onClick={()=>{ setSelectDays(item);setOpenDrawer(false) }}>
-                <span className="text-white p-3">{item} {t("index.days")}</span>
-                {item == selectDays && <Image
-                  src={SELECTImg}
-                  width={11}
-                  height={8}
-                  alt=''
-                  className='mr-2 my-auto'
-                />}
-              </div>
-            )
-          })}
-          
-        </section>
-      </Drawer>
       <MsgSuccess isShow={addData.isShow} title={addData.title} status={addData.status} msg={addData.msg} reset={ ()=>{setAddData({...addData,isShow: false})} } />
     </article>
   );

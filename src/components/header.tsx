@@ -17,6 +17,9 @@ import SELECTImg from "@images/select.png"
 import CLOSEImg from "@images/close.png"
 import LOGOIMG from "@images/logo.png"
 import MENUIMG from "@images/menu.png"
+import HOMEIMG from "@images/home.png"
+import INCOMEIMG from "@images/income.png"
+import MINEIMG from "@images/mine.png"
 import "./header.css"
 
 import { NextRouter } from 'next/router';
@@ -25,19 +28,11 @@ import { shortenString } from '@/lib/utils';
 import { useTranslation } from "react-i18next"
 import { InvalidAbiItemError } from 'viem';
 
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import { Box, Tabs, Tab, Drawer } from "@mui/material"
+import { styled } from '@mui/material/styles';
 
 interface IHeaderProps extends HTMLAttributes<HTMLDivElement> {
 }
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
 
 export default function Header({ }: IHeaderProps) {
     const pathname = usePathname()
@@ -45,6 +40,11 @@ export default function Header({ }: IHeaderProps) {
     const { i18n } = useTranslation()
     const [ menuShow,setMenuShow ] = useState(false)
     const [ imgIndex, setImgIndex ] = useState(0)
+    const [ open, setOpen ] = React.useState(false);
+
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen);
+    };
     
     const localList = [
         {
@@ -122,8 +122,50 @@ export default function Header({ }: IHeaderProps) {
         setValue(newValue);
     };
 
+    interface StyledTabsProps {
+        children?: React.ReactNode;
+        value: number;
+        onChange: (event: React.SyntheticEvent, newValue: number) => void;
+    }
+
+    const StyledTabs = styled((props: StyledTabsProps) => (
+        <Tabs
+            {...props}
+            TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        />
+        ))({
+        '& .MuiTabs-indicator': {
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+        },
+        '& .MuiTabs-indicatorSpan': {
+            maxWidth: 40,
+            width: '100%',
+            backgroundColor: '#C52383',
+        },
+    });
+
+    interface StyledTabProps { label: string }
+      
+    const StyledTab = styled((props: StyledTabProps) => (
+        <Tab disableRipple {...props} />
+    ))(({ theme }) => ({
+        textTransform: 'none',
+        fontWeight: theme.typography.fontWeightRegular,
+        fontSize: theme.typography.pxToRem(15),
+        marginRight: theme.spacing(1),
+        color: 'rgba(255, 255, 255, 0.7)',
+        '&.Mui-selected': {
+            color: '#fff',
+        },
+        '&.Mui-focusVisible': {
+            backgroundColor: 'rgba(100, 95, 228, 0.32)',
+        },
+    }));
+
     return (
-        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5 z-50'>
+        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5'>
             <div className='m-auto navbar flex justify-between'>
                 <div 
                     className='p-1 navbar-start w-fit rounded flex px-2'
@@ -142,28 +184,18 @@ export default function Header({ }: IHeaderProps) {
                         height={18}
                         alt=''
                         className="sm:hidden"
+                        onClick={toggleDrawer(true)}
                     />
                     <div className="hidden sm:flex">
-                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" sx={{
-                            '& .MuiTab-root': {
-                                color: '#fff',  // 设置选项卡文字颜色
-                            },
-                            '& .Mui-selected': {
-                                color: '#fff',  // 设置选中选项卡文字颜色
-                            },
-                            '& .MuiTabs-indicator': {
-                                backgroundColor: '#C52383',  // 设置选中指示器的颜色
-                            },
-                            '& .MuiTabs-indicatorSpan': {
-                                maxWidth: 40,
-                                width: '100%',
-                                backgroundColor: '#635ee7',
-                            },
-                        }}>
-                            <Tab label="首页" {...a11yProps(0)} />
-                            <Tab label="收益" {...a11yProps(1)} />
-                            <Tab label="我的ATB" {...a11yProps(2)} />
-                        </Tabs>
+                        <StyledTabs
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="styled tabs example"
+                        >
+                            <StyledTab label="首页" />
+                            <StyledTab label="收益" />
+                            <StyledTab label="我的团队" />
+                        </StyledTabs>
                     </div>
                 </div>
                 <div className='navbar-end flex justify-end gap-3'>
@@ -230,6 +262,36 @@ export default function Header({ }: IHeaderProps) {
                     
                 </div>
             </div>
+            <Drawer open={open} onClose={toggleDrawer(false)} className="z-0">
+                <div className="w-[290px] bg-[rgb(22,30,33)] h-full">
+                    <div className="nav-list">
+                        <div className="nav-item">
+                            <Image
+                                src={HOMEIMG}
+                                width={20}
+                                alt=''
+                            />
+                            <span className="text-xm">首页</span>
+                        </div>
+                        <div className="nav-item">
+                            <Image
+                                src={INCOMEIMG}
+                                width={20}
+                                alt=''
+                            />
+                            <span className="text-xm">收益</span>
+                        </div>
+                        <div className="nav-item">
+                            <Image
+                                src={MINEIMG}
+                                width={20}
+                                alt=''
+                            />
+                            <span className="text-xm">团队</span>
+                        </div>
+                    </div>
+                </div>
+            </Drawer>
         </div>
     )
 }
