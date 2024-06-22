@@ -4,6 +4,7 @@ import WallectButton from './wallet/connect'
 import Image from "next/image";
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
+import LOCALEImg from "@images/locale/locale.png"
 import CNImg from "@images/locale/cn.png"
 import ENImg from "@images/locale/en.png"
 import JPImg from "@images/locale/jp.png"
@@ -23,7 +24,7 @@ import MINEIMG from "@images/mine.png"
 import "./header.css"
 
 import { NextRouter } from 'next/router';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, } from 'next/navigation';
 import { shortenString } from '@/lib/utils';
 import { useTranslation } from "react-i18next"
 import { InvalidAbiItemError } from 'viem';
@@ -41,6 +42,7 @@ export default function Header({ }: IHeaderProps) {
     const [ menuShow,setMenuShow ] = useState(false)
     const [ imgIndex, setImgIndex ] = useState(0)
     const [ open, setOpen ] = React.useState(false);
+    const router = useRouter()
 
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
@@ -119,8 +121,21 @@ export default function Header({ }: IHeaderProps) {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+        toPage(newValue)
     };
+
+    const toPage = (newValue:number) => {
+        setOpen(false)
+        if(newValue == value) return
+        setValue(newValue)
+        if(newValue == 0){
+            router.push(`/`)
+        }else if(newValue == 1){
+            router.push(`/service`)
+        }else if(newValue == 2){
+            router.push(`/mine`)
+        }
+    }
 
     interface StyledTabsProps {
         children?: React.ReactNode;
@@ -165,7 +180,7 @@ export default function Header({ }: IHeaderProps) {
     }));
 
     return (
-        <div className='bg-[rgba(25,41,46)] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5' style={{zIndex: "100"}}>
+        <div className='bg-[#131C20] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5' style={{zIndex: "100"}}>
             <div className='m-auto navbar flex justify-between'>
                 <div 
                     className='p-1 navbar-start w-fit rounded flex px-2'
@@ -200,9 +215,11 @@ export default function Header({ }: IHeaderProps) {
                 </div>
                 <div className='navbar-end flex justify-end gap-3'>
                 <div className="dropdown dropdown-end flex justify-end">
-                        <div tabIndex={0} className="rounded-[6px] flex p-[10px] justify-center text-right bg-[#FFFFFF26]" style={{width: "40px",height: "40px"}} onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }>
+                        <div tabIndex={0} className="rounded-[6px] flex p-[10px] justify-center text-right bg-[#E1146E]" style={{width: "40px",height: "40px"}} 
+                        // onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }
+                        >
                             <Image
-                                src={localList[imgIndex].img}
+                                src={LOCALEImg}
                                 width={20}
                                 height={20}
                                 alt=''
@@ -265,7 +282,7 @@ export default function Header({ }: IHeaderProps) {
             <Drawer open={open} onClose={toggleDrawer(false)} className="z-0">
                 <div className="w-[290px] bg-[rgb(22,30,33)] h-full">
                     <div className="nav-list">
-                        <div className="nav-item">
+                        <div className="nav-item" onClick={()=>{toPage(0)}}>
                             <Image
                                 src={HOMEIMG}
                                 width={20}
@@ -273,7 +290,7 @@ export default function Header({ }: IHeaderProps) {
                             />
                             <span className="text-xm">首页</span>
                         </div>
-                        <div className="nav-item">
+                        <div className="nav-item" onClick={()=>{toPage(1)}}>
                             <Image
                                 src={INCOMEIMG}
                                 width={20}
@@ -281,7 +298,7 @@ export default function Header({ }: IHeaderProps) {
                             />
                             <span className="text-xm">收益</span>
                         </div>
-                        <div className="nav-item">
+                        <div className="nav-item" onClick={()=>{toPage(2)}}>
                             <Image
                                 src={MINEIMG}
                                 width={20}

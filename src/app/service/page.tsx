@@ -94,7 +94,6 @@ export default function Service() {
     ]
     return (
         <div className='px-[22px]'>
-            <Banner />
             <div className="title mt-5" style={{fontSize: "16px",color: "#fff"}}>{t("service.title")}</div>
             <div className="mt-10 flex usdt-row">
                 <div className='bg-[rgba(255,255,255,0.2)] p-3 rounded-xl flex-col usdt-item'>
@@ -198,7 +197,6 @@ export default function Service() {
                 </div>
             </div>
             <div className="title mt-5">{t("index.fre_q")}</div> 
-            <Fna />
             <p className='my-5 text-[#e4e4e4] text-xs text-center'>
                 {t("service.all_rights_reserved")}
             </p>

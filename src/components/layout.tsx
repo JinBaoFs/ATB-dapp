@@ -12,8 +12,8 @@ interface ILayoutProps extends HTMLAttributes<HTMLDivElement> {
 export default function Layout({ children }: ILayoutProps) {
     let pathName = usePathname()
     return (
-        <div className='text-white bg-[#192832] max-h-screen max-screen-sm w-screen flex bg-cover bg-center h-screen' style={{ backgroundImage: `url(${BGIMG})`,height: "100vh",position:"relative" }}>
-            <div className='w-full max-w-screen '>
+        <div className='text-white bg-[#192832] max-h-screen max-screen-sm w-screen flex bg-cover bg-center h-screen' style={{ height: "100vh",position:"relative" }}>
+            <div className='w-full max-w-screen bg-[#192832]'>
                 <Image
                     src={BGIMG}
                     layout="fill"
