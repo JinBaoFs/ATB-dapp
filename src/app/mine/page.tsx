@@ -1,6 +1,5 @@
 "use client";
 import { useContractUserBalance, useGetUserInfo, userContractApprove, useContractUserAllowanceStatus } from '@/hooks/usdt'
-import { Divider, Drawer, Snackbar } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useAccount, useBalance , useEnsAvatar,useNetwork } from 'wagmi'
 
@@ -9,11 +8,15 @@ import { useRouter, } from 'next/navigation';
 import { useTranslation } from "react-i18next"
 import { shortenString } from "@/lib/utils";
 import Image from "next/image"
-import NFTImg from "@images/icon/usdt_03.png"
-import USTDImg from "@images/icon/ustd.png"
-import PendingIcon from "@images/icon/pending.png"
-import FailIcon from "@images/icon/fail.png"
-import SuccessIcon from "@images/icon/success.png"
+import XIMG from "@images/xing.png"
+import ATBIMG from "@images/ATB.png"
+import HOMEIMG02 from "@images/home-02.png"
+import ROBOIMG from "@images/robo.png"
+import WALLETIMG from "@images/wallet.png"
+import TIMG01 from "@images/t-01.png"
+import TIMG02 from "@images/t-02.png"
+import TIMG03 from "@images/t-03.png"
+import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import "./page.css"
 
 
@@ -86,145 +89,186 @@ export default function Mine() {
         }, 2000)
     }
     return (
-        <div className='p-[16px] overflow-y-scroll' style={{height: "calc(100vh - 100px)"}}>
-            <div className="flex flex-col" style={{alignItems: "center"}}>
-                <Image
-                    src={NFTImg}
-                    width={40}
-                    height={40}
-                    alt=''
-                    className='rounded-full'
-                />
-                <p className="my-auto mt-2">
-                    {!address ? "-" : shortenString(address)}
-                </p>
-                <div className="total-number text-center mt-2">{ Number(userinfo?.sumIncome*1 || 0).toFixed(2) || "-"} USDT</div>
-                <p className='text-sm mt-1 text-[rgba(255,255,255,0.8)]'>{t("mine.total_revenue")}</p>
-                <div className="line mt-2"></div>
-            </div>
-            <div className="rounded-xl">
-                <div className="w-full rounded-xl m-auto text-[#fff]">
-                    <div className="mt-3">
-                        <div className="flex justify-between" style={{alignItems: "center"}}>
-                            <div style={{fontSize: "14px",color: "rgba(255,255,255,0.8)"}}>{t("mine.locked_balance")}:</div>
-                            <div className="text-lg font-bold">{ Number(userinfo?.freezeAmount*1 || 0).toFixed(2) || "-"} USDT</div>
-                        </div>
-                        <div className="flex justify-between mt-2" style={{alignItems: "center"}}>
-                            <div style={{fontSize: "14px",color: "rgba(255,255,255,0.8)"}}>{t("mine.total_earnings")}:</div>
-                            <div className="text-lg font-bold">{ Number(userinfo?.dayIncome*1 || 0).toFixed(2) || "-"} USDT</div>
-                        </div>
-                        <div className="flex justify-between mt-2" style={{alignItems: "center"}}>
-                            <div style={{fontSize: "14px",color: "rgba(255,255,255,0.8)"}}>{t("mine.wallet_balance")}:</div>
-                            <div className="text-lg font-bold"> {Number(result?.data?.formatted || 0).toFixed(2) || "-" } { chain?.id == 1 ? "ETH" : "BNB" }</div>
-                        </div>
-                        <div className="flex justify-between mt-2" style={{alignItems: "center"}}>
-                            <div style={{fontSize: "14px",color: "rgba(255,255,255,0.8)"}}>{t("mine.wallet_balance")}:</div>
-                            <div className="text-lg font-bold">{ Number(userBalance*1 || 0).toFixed(2) || "-"} USDT</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.1)] mt-3 px-[14px] py-[14px] rounded-[10px] cash-box">
-                <p className='text-white font-bold' style={{fontSize: "14px"}}>
-                    {t("mine.withdraw_wallet")}
-                </p>
-                <p className='mt-2 text-[rgba(255,255,255,0.8)]' style={{fontSize: "12px"}}>
-                    {t("mine.withdraw_able")}: {Number(userinfo?.alreadyIncome*1 || 0).toFixed(2) || "-"} USDT
-                </p>
-                <div className='mt-2 bg-[rgba(255,255,255,0.1)] p-3 rounded-lg flex justify-between' style={{alignItems:"center"}}>
-                    <input value={withoutValue} type="text" onChange={(e) => {
-                        if (Number(e.target.value) > userinfo.alreadyIncome) {
-                            setSnackBarValue({
-                                ...snackbarValue,
-                                open: true,
-                                message: t("mine.withdraw_tips_01"),
-                            })
-                            return
-                        }
-                        setWithoutValue(e.target.value)
-                    }} className='!bg-[rgba(255,255,255,0)] h-[28px] focus:!bg-[rgba(255,255,255,0)] text-white !ring-0 focus-visible:!ring-0 w-full mr-2' />
-                    <div className="h-[20px]">
-                        <Image
-                            src={USTDImg}
-                            width={20}
-                            height={20}
-                            alt=''
-                            className='rounded-full'
-                        />
-                    </div>
-                </div>
-                <div className="flex justify-between mt-3">
-                    <div onClick={() => { router.push(`/mine/record?c=${paramValue}`) }} className='record-btn'>
-                        {t("mine.withdraw_record")}
-                    </div>
-                    <div className='cash-btn'
-                        onClick={() => {
-                            if (Number(withoutValue) <= userinfo.alreadyIncome) {
-                                setOpenDrawer(true)
-                                setWithDrawStatus(WithDrawTypes.UNDO)
-                            }
-                        }}
-                    >
-                        {t("mine.withdraw")}
-                    </div>
-                </div>
-                <div className="sync-m-01"></div>
-                <div className="sync-m-02"></div>
-            </div>
-            <Snackbar
-                open={snackbarValue.open}
-                autoHideDuration={6000}
-                message={snackbarValue.message}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                onClose={() => {
-                    setSnackBarValue({
-                        ...snackbarValue,
-                        open: false,
-                        message: ""
-                    })
-                }}
-            />
-            <Drawer
-                anchor="bottom"
-                open={openDrawer}
-                onClose={() => setOpenDrawer(false)}
-                PaperProps={{
-                    style: {
-                        backgroundColor: "#252525",
-                        borderRadius: "10px 10px 0px 0px",
-                    },
-                }}
-            >
-                <section className='w-full p-5' style={{
-                    background: "linear-gradient( 180deg, #2D5751 0%, #2F4D32 100%)",
-                }}>
-                    <p className='text-center text-base text-white'>
-                        {t("mine.confirm_withdraw")}
-                    </p>
-                    <div className="line mt-2"></div>
-                    {
-                        withDrawStatus == WithDrawTypes.UNDO ?
-                            <div className='mt-5 flex justify-between'>
-                                <div className='record-btn cursor-pointe' onClick={() => setOpenDrawer(false)}>
-                                    {t("mine.cancel")}
+        <article 
+            className="h-full"
+            style={{ overflowX: 'hidden',overflowY: 'auto',position: "relative",zIndex: "10", }}
+        >
+            <article className="w-full mt-[80px] px-4 sm:px-20">
+                <Grid container spacing={2}>
+                    <Grid item xs={12} lg={6}>
+                        <div className="w-full bg-[#131C20] py-5 px-5 sm:px-8 sm:py-8">
+                            <div className="flex flex-col py-2"> 
+                                <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
+                                <div className="w-full">
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[70%] sm:w-[80%] p-3 sm:p-5">0x00000000</div>
                                 </div>
-                                <div className='cash-btn' onClick={handleCash}>
-                                    {t("mine.confirm")}
-                                </div>
-                            </div> : <div className='mt-5'>
-                                <Image
-                                    src={withDrawStatus == WithDrawTypes.PENDING ? PendingIcon : withDrawStatus == WithDrawTypes.SUCCESS ? SuccessIcon : FailIcon}
-                                    width={45}
-                                    height={45}
-                                    alt=""
-                                    className='m-auto mb-3'
-                                />
-                                <p className='text-center text-xs text-[#B588B4]'>{withDrawStatus == WithDrawTypes.PENDING ? t("mine.status_pedding") : withDrawStatus == WithDrawTypes.SUCCESS ? t("mine.status_success") : t("mine.status_fail") }</p>
                             </div>
-                    }
-                </section>
-            </Drawer>
-            
-        </div>
+                            <div className="flex flex-col py-2"> 
+                                <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的邀请链接</div>
+                                <div className="w-full flex">
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[70%] sm:w-[80%] p-3 sm:p-5">0x00000000</div>
+                                    <div className="flex-1 ml-2 sm:ml-5 text-white font-bold bg-[#017EFF] flex justify-center items-center cursor-pointer text-base sm:text-xl">复制</div>
+                                </div>
+                            </div>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} lg={6} className="flex">
+                        <div className="w-full bg-[#131C20] flex flex-col">
+                            <div className="#283C43 flex justify-between items-center bg-[#283C43] py-3 sm:py-5 px-5 sm:px-8">
+                                <div className="text-[#E1146E] text-base sm:text-xl font-bold">当前节点等级(星):</div>
+                                <div className="flex items-center">
+                                    { [1,2].map((item,idx)=>{
+                                        return (
+                                            <Image
+                                                src={XIMG}
+                                                alt=''
+                                                className="w-[20px] sm:w-[26px] ml-2"
+                                                style={{height:"fit-content"}}
+                                            />
+                                        )
+                                    }) }
+                                </div>
+                            </div>
+                            <div className="#283C43 flex justify-between items-center py-8 sm:py-12 px-5 sm:px-8 text-white text-xs sm:text-lg font-bold">
+                                <div >每月新增(USDT):</div>
+                                <div>1000</div>
+                            </div>
+                            <div className="flex justify-between w-full mb-8">
+                                <div className="flex justify-center items-center" style={{width: "50%"}}>
+                                    <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
+                                        <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>
+                                    </div>
+                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">达成</span>
+                                </div>
+                                <div className="flex justify-center items-center" style={{width: "50%"}}>
+                                    <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
+                                        <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%",background: "#000"}}></div>
+                                    </div>
+                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">未达成</span>
+                                </div>
+                            </div>
+                        </div>
+                    </Grid>
+                </Grid>
+                <div className="bg-[#131C20] mt-5 mb-5">
+                    <div className="px-5 py-5 sm:px-10">
+                        <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">收益</div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} lg={4} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
+                                    <div className="flex items-center">
+                                        <Image
+                                            src={TIMG01}
+                                            alt=''
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            style={{height:"fit-content"}}
+                                        />
+                                        <span className="text-xs sm:text-xl font-bold">总收益(USDT)：</span>
+                                    </div>
+                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12} lg={4} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
+                                    <div className="flex items-center">
+                                        <Image
+                                            src={TIMG02}
+                                            alt=''
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            style={{height:"fit-content"}}
+                                        />
+                                        <span className="text-xs sm:text-xl font-bold">已产出(USDT)：</span>
+                                    </div>
+                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12} lg={4} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
+                                    <div className="flex items-center">
+                                        <Image
+                                            src={TIMG03}
+                                            alt=''
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            style={{height:"fit-content"}}
+                                        />
+                                        <span className="text-xs sm:text-xl font-bold">已领取(USDT)：</span>
+                                    </div>
+                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <div className="text-white font-bold bg-[#026451] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-12 text-base sm:text-2xl">领取USDT</div>
+                </div>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} lg={6} className="flex justify-center">
+                        <div className="bg-[#131C20] py-5 sm:py-8 px-5 sm:px-10 w-full">
+                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的ATB明细</div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">已质押ATB数量：</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">预计收益ATB：</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">今日产出ATB：</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">累积领取ATB：</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                        </div>            
+                    </Grid>
+                    <Grid item xs={12} lg={6} className="flex justify-center">
+                        <div className="bg-[#131C20] py-5 sm:py-8 px-5 sm:px-10 w-full">
+                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold hidden sm:opacity-0 sm:block">我的ATB明细</div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">平均质押价格(USDT):</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">预计收益(USDT):</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">今日可领取收益(USDT):</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">累积领取收益(USDT):</span>
+                                </div>
+                                <div className="text-base sm:text-xl">0.00</div>
+                            </div>
+                        </div> 
+                    </Grid>
+                </Grid>
+                <div className="bg-[#131C20] mt-5 mb-5">
+                    <div className="px-5 py-5 sm:px-10 text-base font-bold sm:text-lg flex flex-col justify-center items-center">
+                        <span className="text-[#E1146D]">已领取总收益（枚）</span>
+                        <span className="mt-2 sm:mt-5">20≈80USDT</span>
+                    </div>
+                    <div className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-2 text-base sm:text-2xl">领取收益</div>
+                </div>
+                <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">说明: 金本位+币本位2倍出局，奖励随时领取每日按照持仓数量产出1%</div>
+            </article>
+        </article>
     )
 }

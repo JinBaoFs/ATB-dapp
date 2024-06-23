@@ -102,7 +102,6 @@ export default function Home() {
             </div>
             <div className=" px-[20px] py-[10px] sm:px-[92px] bg-[#1A2939] mt-2 sm:mt-5" style={{paddingRight: "20px"}}>
               <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span><span className="text-xs sm:text-2xl ml-2 font-normal">(高额收益)</span></span>
-              
             </div>
           </Grid>
           <Grid item xs={12} lg={5} className="flex justify-center">
