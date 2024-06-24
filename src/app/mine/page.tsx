@@ -6,21 +6,16 @@ import { useAccount, useBalance , useEnsAvatar,useNetwork } from 'wagmi'
 import { postUserWithoutExtract, getAddrHashDeposit } from '@/server/user';
 import { useRouter, } from 'next/navigation';
 import { useTranslation } from "react-i18next"
+import ClipboardJS from 'clipboard';
 import { shortenString } from "@/lib/utils";
 import Image from "next/image"
 import XIMG from "@images/xing.png"
-import ATBIMG from "@images/ATB.png"
-import HOMEIMG02 from "@images/home-02.png"
-import ROBOIMG from "@images/robo.png"
-import WALLETIMG from "@images/wallet.png"
-import TIMG01 from "@images/t-01.png"
-import TIMG02 from "@images/t-02.png"
-import TIMG03 from "@images/t-03.png"
 import MIMG01 from "@images/m-01.png"
 import MIMG02 from "@images/m-02.png"
 import MIMG03 from "@images/m-03.png"
 import MIMG04 from "@images/m-04.png"
-import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
+import { Grid } from "@mui/material";
+import MsgSuccess from '@/components/msgsuccess';
 import "./page.css"
 
 
@@ -50,6 +45,13 @@ export default function Mine() {
     const [withDrawStatus, setWithDrawStatus] = useState<WithDrawTypes>(WithDrawTypes.UNDO)
     const params = new URLSearchParams(window.location.search)
     const paramValue = params.get('c')
+
+    const [addData,setAddData] = useState({
+        isShow: false,
+        title: '',
+        status: 0,
+        msg: ''
+    })
     
     useEffect(()=>{
         if(userinfo.alreadyIncome){
@@ -92,6 +94,22 @@ export default function Mine() {
             setWithDrawStatus(WithDrawTypes.UNDO)
         }, 2000)
     }
+
+    const handleCopyClick = () => {
+        const clipboard = new ClipboardJS('.copy-btn');
+        clipboard.on('success', function(e) {
+            setAddData({
+                title: "",
+                isShow: true,
+                status: 0,
+                msg: "复制成功"
+            })
+        });
+        clipboard.on('error', function(e) {
+            console.error('Failed to copy text:', e.action);
+            // 处理复制失败的情况
+        });
+    };
     return (
         <article 
             className="h-full"
@@ -104,14 +122,22 @@ export default function Mine() {
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
                                 <div className="w-full">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[70%] sm:w-[80%] p-3 sm:p-5">0x00000000</div>
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">0x00000000</div>
                                 </div>
                             </div>
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的邀请链接</div>
                                 <div className="w-full flex">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[70%] sm:w-[80%] p-3 sm:p-5">0x00000000</div>
-                                    <div className="flex-1 ml-2 sm:ml-5 text-white font-bold bg-[#017EFF] flex justify-center items-center cursor-pointer text-base sm:text-xl">复制</div>
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">0x00000000</div>
+                                    <div 
+                                        className="
+                                        copy-btn flex-1 ml-2 sm:ml-5 
+                                        text-white font-bold bg-[#017EFF] 
+                                        flex justify-center items-center 
+                                        cursor-pointer text-base sm:text-xl"
+                                        data-clipboard-text="Hello, world!" 
+                                        onClick={handleCopyClick}
+                                    >复制</div>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +152,7 @@ export default function Mine() {
                                             <Image
                                                 src={XIMG}
                                                 alt=''
-                                                className="w-[20px] sm:w-[26px] ml-2"
+                                                className="w-[16px] sm:w-[18px] ml-2"
                                                 style={{height:"fit-content"}}
                                             />
                                         )
@@ -155,55 +181,55 @@ export default function Mine() {
                     </Grid>
                 </Grid>
                 <div className="bg-[#131C20] mt-5 mb-5">
-                    <div className="px-5 py-5 sm:px-5 sm:px-10">
+                    <div className="px-5 py-5 sm:px-10">
                         <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">收益</div>
                         <Grid container spacing={2}>
                             <Grid item xs={3} lg={3} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-4 w-full items-center">
                                     <Image
                                         src={MIMG01}
                                         alt=''
                                         className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
                                         style={{height:"fit-content"}}
                                     />
-                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">钱包</div>
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center sm:mr-[20px]">钱包</div>
                                 </div>
                             </Grid>
                             <Grid item xs={3} lg={3} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-4 w-full items-center">
                                     <Image
                                         src={MIMG02}
                                         alt=''
                                         className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
                                         style={{height:"fit-content"}}
                                     />
-                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">节点等级</div>
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center sm:mr-[20px]">节点等级</div>
                                 </div>
                             </Grid>
                             <Grid item xs={3} lg={3} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-4 w-full items-center">
                                     <Image
                                         src={MIMG03}
                                         alt=''
                                         className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
                                         style={{height:"fit-content"}}
                                     />
-                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">总业绩</div>
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center sm:mr-[30px]">总业绩</div>
                                 </div>
                             </Grid>
                             <Grid item xs={3} lg={3} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-4 w-full items-center">
                                     <Image
                                         src={MIMG04}
                                         alt=''
                                         className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
                                         style={{height:"fit-content"}}
                                     />
-                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">直推矿机数量</div>
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center sm:mr-[20px]">直推矿机数量</div>
                                 </div>
                             </Grid>
                         </Grid>
-                        <div className="h-[200px] sm:h-[360px] py-2 sm:py-5" style={{overflowY: "auto"}}>
+                        <div className="h-[200px] sm:h-[320px] py-2 sm:py-5" style={{overflowY: "auto"}}>
                             <div className="flex w-full mb-2 text-xs sm:text-base">
                                 <div className="w-[25%] flex items-center justify-center">
                                     0x0000
@@ -212,7 +238,7 @@ export default function Mine() {
                                     lv2
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
-                                    14.15926
+                                    14.159
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
                                     5
@@ -221,75 +247,154 @@ export default function Mine() {
                         </div>
                     </div>
                 </div>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} lg={6} className="flex justify-center">
-                        <div className="bg-[#131C20] py-5 sm:py-8 px-5 sm:px-10 w-full">
-                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的ATB明细</div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">已质押ATB数量：</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">预计收益ATB：</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">今日产出ATB：</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">累积领取ATB：</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                        </div>            
-                    </Grid>
-                    <Grid item xs={12} lg={6} className="flex justify-center">
-                        <div className="bg-[#131C20] py-5 sm:py-8 px-5 sm:px-10 w-full">
-                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold hidden sm:opacity-0 sm:block">我的ATB明细</div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">平均质押价格(USDT):</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">预计收益(USDT):</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">今日可领取收益(USDT):</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
-                                <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">累积领取收益(USDT):</span>
-                                </div>
-                                <div className="text-base sm:text-xl">0.00</div>
-                            </div>
-                        </div> 
-                    </Grid>
-                </Grid>
-                <div className="bg-[#131C20] mt-5 mb-5">
-                    <div className="px-5 py-5 sm:px-10 text-base font-bold sm:text-lg flex flex-col justify-center items-center">
-                        <span className="text-[#E1146D]">已领取总收益（枚）</span>
-                        <span className="mt-2 sm:mt-5">20≈80USDT</span>
+                <div className="bg-[#131C20] mb-2 px-3 py-5 sm:px-10">
+                    <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">说明</div>
+                    <div className="flex items-center text-xs sm:text-xl font-bold">
+                        <div className="">直推增加算力释放<span className="text-[#E1146E] mr-1 sm:mr-2">20%</span>(ATB)</div>
+                        <div className="ml-2 sm:ml-5">间推增加算力释放<span className="text-[#E1146E] mr-1 sm:mr-2">10%</span>(ATB)</div>
+                    </div> 
+                    <div className="flex mt-2 sm:mt-5">
+                        <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px]" style={{height:"fit-content"}}/>
+                        </div>
+                        <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">
+                            1星节点要求，直推
+                            <span className="text-[#E1146E]">5台</span>
+                            ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
+                            <span className="text-[#E1146E]">5万U</span>
+                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            <span className="text-[#E1146E]">5%</span>
+                            加速释放。
+                        </div>
                     </div>
-                    <div className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-2 text-base sm:text-2xl">领取收益</div>
+                    <div className="flex mt-2 sm:mt-5">
+                        <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                        </div>
+                        <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">
+                            2星节点要求，直推
+                            <span className="text-[#E1146E]">5台</span>
+                            ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
+                            <span className="text-[#E1146E]">15万U</span>
+                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            <span className="text-[#E1146E]">8%</span>
+                            加速释放。
+                        </div>
+                    </div>
+                    <div className="flex mt-2 sm:mt-5">
+                        <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                        </div>
+                        <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">
+                            3星节点要求，直推
+                            <span className="text-[#E1146E]">5台</span>
+                            ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
+                            <span className="text-[#E1146E]">30万U</span>
+                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            <span className="text-[#E1146E]">11%</span>
+                            加速释放。
+                        </div>
+                    </div>
+                    <div className="flex mt-2 sm:mt-5">
+                        <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                        </div>
+                        <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">
+                            4星节点要求，直推
+                            <span className="text-[#E1146E]">5台</span>
+                            ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
+                            <span className="text-[#E1146E]">60万U</span>
+                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            <span className="text-[#E1146E]">14%</span>
+                            加速释放。
+                        </div>
+                    </div>
+                    <div className="flex mt-2 sm:mt-5">
+                        <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                            <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-3" style={{height:"fit-content"}}/>
+                        </div>
+                        <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">
+                            5星节点要求，直推
+                            <span className="text-[#E1146E]">5台</span>
+                            ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
+                            <span className="text-[#E1146E]">100万U</span>
+                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            <span className="text-[#E1146E]">17%</span>
+                            加速释放。
+                        </div>
+                    </div>
                 </div>
-                <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">说明: 金本位+币本位2倍出局，奖励随时领取每日按照持仓数量产出1%</div>
+                <div className="bg-[#131C20] mb-5 px-3 py-5 sm:px-10">
+                    同级别，拿管理奖50%,达到星级节点的团队长，每月需要新增业绩，没有新增业绩，除了直推间推的加速释放，不享受其他加速挖矿。
+                </div>
+                <div className="bg-[#131C20] mb-5 px-3 py-5 sm:px-10">
+                    <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">要求</div>
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} lg={4}>
+                            <div className="w-full flex">
+                                <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px]" style={{height:"fit-content"}}/>
+                                </div>
+                                <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">1星每月新增 1000 <span className="text-[#0E7815]">USDT</span></div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <div className="w-full flex">
+                                <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                </div>
+                                <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">2星每月新增 3000 <span className="text-[#0E7815]">USDT</span></div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <div className="w-full flex">
+                                <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                </div>
+                                <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">3星每月新增 10000 <span className="text-[#0E7815]">USDT</span></div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <div className="w-full flex">
+                                <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                </div>
+                                <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">4星每月新增 15000 <span className="text-[#0E7815]">USDT</span></div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <div className="w-full flex">
+                                <div className="flex justify-center items-center mr-2 sm:mr-5 bg-[#1C282F] w-[100px] sm:w-[165px]">
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                    <Image src={XIMG} alt='' className="w-[12px] sm:w-[16px] mr-1 sm:mr-2" style={{height:"fit-content"}}/>
+                                </div>
+                                <div className="flex-1 bg-[#1C282F] py-3 px-2 sm:px-5 text-xs sm:text-base">5星每月新增 20000 <span className="text-[#0E7815]">USDT</span></div>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </div>
+                
             </article>
+            <MsgSuccess isShow={addData.isShow} title={addData.title} status={addData.status} msg={addData.msg} reset={ ()=>{setAddData({...addData,isShow: false})} } />
         </article>
     )
 }

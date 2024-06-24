@@ -99,6 +99,8 @@ export default function Header({ }: IHeaderProps) {
     useEffect(()=>{
         if (typeof localStorage !== 'undefined') {
             let lang = localStorage.getItem("lang") || 'en'
+            let menuIndex = localStorage.getItem("menuTabIndex") || '0'
+            setValue(Number(menuIndex))
             i18n.changeLanguage(lang)
         }
     },[])
@@ -117,7 +119,6 @@ export default function Header({ }: IHeaderProps) {
         }
         setMenuShow(false)
     }
-
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -128,6 +129,9 @@ export default function Header({ }: IHeaderProps) {
         setOpen(false)
         if(newValue == value) return
         setValue(newValue)
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem("menuTabIndex",String(newValue))
+        }
         if(newValue == 0){
             router.push(`/`)
         }else if(newValue == 1){
@@ -180,7 +184,7 @@ export default function Header({ }: IHeaderProps) {
     }));
 
     return (
-        <div className='bg-[#131C20] sm:bg-transparent h-16 flex fixed top-0 left-0 justify-between w-full px-5' style={{zIndex: "100"}}>
+        <div className='bg-[#131C20] h-16 flex fixed top-0 left-0 justify-between w-full px-5' style={{zIndex: "100"}}>
             <div className='m-auto navbar flex justify-between'>
                 <div 
                     className='p-1 navbar-start w-fit rounded flex px-2'

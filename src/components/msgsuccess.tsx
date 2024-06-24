@@ -14,22 +14,14 @@ export default function MsgSuccess({isShow,title,status,msg,reset}:any){
         msgShow &&
         <div 
             className=""
-            style={{
-                background:"rgba(0,0,0,0.5)",width: "100vw",height: "100vh", zIndex: "9999",
+            style={{width: "100vw",height: "100vh", zIndex: "9999",
                 position: "fixed",top: "0",left: "0",display:"flex",
-                flexDirection: "column",justifyContent:"center",alignItems: "center"
+                flexDirection: "column",justifyContent:"center",alignItems: "center",
+                background: "rgba(0,0,0,0.5)"
             }}
             onClick={(event)=>{event.stopPropagation();setMsgShow(false);reset()}}
         >
-            <div className="select-lang flex-col rounded-[10px] w-[20rem]" 
-                style={{background: "linear-gradient( 180deg, #2D5751 0%, #2F4D32 100%)"}}
-                onClick={(event)=>{event.stopPropagation()}}
-            >
-                <div className="text-[#22FFE0] p-2 px-3 flex" style={{justifyContent:"space-between"}}>
-                    <span className="truncate w-auto mr-2">{ t("index.tips") }</span>
-                    <span className="cursor-pointer text-[#fff]" style={{fontSize: "20px"}} onClick={(event)=>{ setMsgShow(false);reset() }}>×</span>
-                </div>
-                <div className="line"></div>
+            <div className="flex-col rounded-[10px] w-[70%] sm:w-[800px] bg-[#131C20]">
                 <div className="text-[#fff] p-6 flex flex-col">
                     <Image
                         src={
@@ -42,6 +34,7 @@ export default function MsgSuccess({isShow,title,status,msg,reset}:any){
                     />
                     <div className="text-center mb-5">{ msg }</div>
                 </div>
+                <div className="bg-[#017EFF]">确定</div>
             </div>
         </div>
     )
