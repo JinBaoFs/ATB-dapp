@@ -16,6 +16,10 @@ import WALLETIMG from "@images/wallet.png"
 import TIMG01 from "@images/t-01.png"
 import TIMG02 from "@images/t-02.png"
 import TIMG03 from "@images/t-03.png"
+import MIMG01 from "@images/m-01.png"
+import MIMG02 from "@images/m-02.png"
+import MIMG03 from "@images/m-03.png"
+import MIMG04 from "@images/m-04.png"
 import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import "./page.css"
 
@@ -151,54 +155,71 @@ export default function Mine() {
                     </Grid>
                 </Grid>
                 <div className="bg-[#131C20] mt-5 mb-5">
-                    <div className="px-5 py-5 sm:px-10">
+                    <div className="px-5 py-5 sm:px-5 sm:px-10">
                         <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">收益</div>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
-                                    <div className="flex items-center">
-                                        <Image
-                                            src={TIMG01}
-                                            alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
-                                            style={{height:"fit-content"}}
-                                        />
-                                        <span className="text-xs sm:text-xl font-bold">总收益(USDT)：</span>
-                                    </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                            <Grid item xs={3} lg={3} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                    <Image
+                                        src={MIMG01}
+                                        alt=''
+                                        className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
+                                        style={{height:"fit-content"}}
+                                    />
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">钱包</div>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
-                                    <div className="flex items-center">
-                                        <Image
-                                            src={TIMG02}
-                                            alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
-                                            style={{height:"fit-content"}}
-                                        />
-                                        <span className="text-xs sm:text-xl font-bold">已产出(USDT)：</span>
-                                    </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                            <Grid item xs={3} lg={3} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                    <Image
+                                        src={MIMG02}
+                                        alt=''
+                                        className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
+                                        style={{height:"fit-content"}}
+                                    />
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">节点等级</div>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
-                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
-                                    <div className="flex items-center">
-                                        <Image
-                                            src={TIMG03}
-                                            alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
-                                            style={{height:"fit-content"}}
-                                        />
-                                        <span className="text-xs sm:text-xl font-bold">已领取(USDT)：</span>
-                                    </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                            <Grid item xs={3} lg={3} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                    <Image
+                                        src={MIMG03}
+                                        alt=''
+                                        className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
+                                        style={{height:"fit-content"}}
+                                    />
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">总业绩</div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={3} lg={3} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full items-center">
+                                    <Image
+                                        src={MIMG04}
+                                        alt=''
+                                        className="w-[16px] sm:w-[20px] mr-1 sm:mr-6"
+                                        style={{height:"fit-content"}}
+                                    />
+                                    <div className="text-xs sm:text-xl font-bold flex-1 text-center">直推矿机数量</div>
                                 </div>
                             </Grid>
                         </Grid>
+                        <div className="h-[200px] sm:h-[360px] py-2 sm:py-5" style={{overflowY: "auto"}}>
+                            <div className="flex w-full mb-2 text-xs sm:text-base">
+                                <div className="w-[25%] flex items-center justify-center">
+                                    0x0000
+                                </div>
+                                <div className="w-[25%] flex items-center justify-center">
+                                    lv2
+                                </div>
+                                <div className="w-[25%] flex items-center justify-center">
+                                    14.15926
+                                </div>
+                                <div className="w-[25%] flex items-center justify-center">
+                                    5
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-white font-bold bg-[#026451] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-12 text-base sm:text-2xl">领取USDT</div>
                 </div>
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={6} className="flex justify-center">
