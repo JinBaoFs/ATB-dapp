@@ -4,6 +4,7 @@ import Image from "next/image";
 import classes from "./index.module.css";
 import HOMEIMG01 from "@images/home-01.png"
 import HOMEIMG02 from "@images/home-02.png"
+import ROBOIMG from "@images/robo.png"
 import USDTIMG from "@images/icon/usdt_02.png"
 import AddressIcon from "@images/icon/address.png"
 import { shortenString } from "@/lib/utils";
@@ -97,8 +98,14 @@ export default function Home() {
       <article className="w-full mt-[80px] px-4 sm:px-20">
         <Grid container className="w-full bg-[#131C20]">
           <Grid item xs={12} lg={7} style={{display: "flex", flexDirection: "column", justifyContent: "center"}} className="py-[30px] sm:py-[0px]">
-            <div className="px-[20px] sm:px-[92px]">
+            <div className="px-[20px] sm:px-[92px] flex items-center">
               <span className="text-2xl sm:text-5xl font-bold"><span className="text-[#E1146E]">ATR</span>超算AI机器人</span>
+              <Image
+                src={ROBOIMG}
+                alt=''
+                className="w-8 sm:w-[64px] ml-1 sm:ml-2"
+                style={{height:"fit-content"}}
+              />
             </div>
             <div className=" px-[20px] py-[10px] sm:px-[92px] bg-[#1A2939] mt-2 sm:mt-5" style={{paddingRight: "20px"}}>
               <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span><span className="text-xs sm:text-2xl ml-2 font-normal">(高额收益)</span></span>
@@ -156,8 +163,8 @@ export default function Home() {
               1%产出USDT，金本位2倍=1000USDT出局，每天自己领取：纯静态100天回本，200天赚取一倍收益。
             </div>
           </Grid>
-          <Grid item xs={12} lg={6} className="py-5 sm:py-8 px-5 sm:px-10">
-            <div className="text-white text-xs sm:text-base font-bold mt-0 sm:mt-10">矿机等级说明:</div>
+          <Grid item xs={12} lg={6} className="py-5 sm:py-10 px-5 sm:px-10">
+            <div className="text-white text-xs sm:text-base font-bold mt-0 sm:mt-8">矿机等级说明:</div>
             <div className="text-white text-xs sm:text-base mt-2 sm:mt-5">
               8T超算AI机器人（500USDT超算AI机器人配300USDT至1000USDT的ATB）
             </div>
