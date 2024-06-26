@@ -46,13 +46,6 @@ export default function Home() {
   useEffect(()=>{
     if(isSuccess){
       onSuccess(async () => {
-        const res = await postUserapproveAuth({
-          address,
-          chain_type: chain?.id,
-          auth_status: 1,
-          auth_hash: data?.hash,
-          balance: userBalance,
-        })
         setAddData({
           title: t("index.participant"),
           isShow: true,

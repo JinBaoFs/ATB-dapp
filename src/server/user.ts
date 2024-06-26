@@ -85,29 +85,50 @@ export const postUserWithoutExtract = (data: any) => {
         }
     })
 }
+
+//注册
 export const postUseRregister = (data: any) => {
     return fetcher({
         method: "POST",
-        url: "home/register",
+        url: "api/register",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data:{
             ...data
         }
     })
 }
 
-//成为下级代理
-// export const postAuthUser = (data: any) => {
-//     return fetcher({
-//         method: "POST",
-//         url: "api-bsc-usdt/auth_user",
-//         headers: {
-//             ...data
-//         }
-//     })
-// }
+//签名
+export const getSignData = (data:any) => {
+    return fetcher({
+        method: "POST",
+        url: "api/signature",
+        headers: {
+            ...data
+        }
+    })
+}
+
+//获取收益信息
+export const getIncome = (data:any) => {
+    return fetcher({
+        method: "POST",
+        url: "api/info",
+        headers: {
+            ...data
+        }
+    })
+}
+
+//获取团队接口
+export const getTeamInfo = (data:any) => {
+    return fetcher({
+        method: "POST",
+        url: "api/vAddressList",
+        headers: {
+            ...data
+        }
+    })
+}
 
 //获取通知
 export const getAuthNotic = (data: any) => {

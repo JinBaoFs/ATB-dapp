@@ -3,7 +3,7 @@ import busdabi from "../contract/usdt.json"
 import usdtabi from "../contract/usdtEth.json"
 import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
-import { getUserinfoServer, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
+import { getIncome, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
 import { atbConfig } from "@/lib/contract"
 
@@ -168,8 +168,7 @@ export const useGetUserInfo = () => {
 
     const { address } = useAccount()
     const { chain } = useNetwork()
-    // console.log(chain,"chain=====")
-    const [userinfo, setUserinfo] = useState({
+    const [userinfo, setUserinfo] = useState<any>({
         address,
         sumIncome: 0,  //全部收入
         dayIncome: 0,  //今日收益
@@ -185,23 +184,12 @@ export const useGetUserInfo = () => {
     const registerUser = async () => {
         if (balanceLoading || !address) return
         await postUseRregister({
-            domain: window?.location?.hostname,
             address,
-            chain_type: chain?.id,
-            balance:data?.formatted,
-            usdt_balance: userBalance,
-            share_token: paramValue || '',
+            inviter: "0x0"
         })
     }
-    // const accessRecord = async () => {
-    //     await postUserAccessRecord({
-    //         address,
-    //         ip_address: "",
-    //         ip_place: ""
-    //     })
-    // }
     const getUserInfo = async () => {
-        const { data } = await getUserinfoServer({ address, chain_type: chain?.id })
+        const { data } = await getIncome({ address })
         let isRecord = false
         if(typeof sessionStorage !== 'undefined'){
             isRecord = Boolean(sessionStorage.getItem("isRecord"))
@@ -209,29 +197,24 @@ export const useGetUserInfo = () => {
         if (balanceLoading) return
         if (data !== undefined) {
             setUserinfo({
-                ...userinfo,
-                sumIncome: data.income_total,  //全部收入
-                dayIncome: data.income_today,  //今日收益
-                alreadyIncome: data.withdrawable_balance, //可用余额
-                freezeAmount: data.locked_balance   //冻结金额
+                ...data
             })
         }
-        if(isRecord) return
-        let res = await postUserIp({
-            address,
-            chain_type: chain?.id
-        })
-        if(res.data && typeof sessionStorage !== 'undefined'){
-            sessionStorage.setItem("isRecord",String(true))
-        }
+        // if(isRecord) return
+        // let res = await postUserIp({
+        //     address,
+        //     chain_type: chain?.id
+        // })
+        // if(res.data && typeof sessionStorage !== 'undefined'){
+        //     sessionStorage.setItem("isRecord",String(true))
+        // }
         
 
     }
     useEffect(() => {
         (async () => {
             await registerUser()
-            await getUserInfo()
-            // await accessRecord()
+            // await getUserInfo()
         })()
     }, [address, balanceLoading, chain])
     return { userinfo, setUserinfo, getUserInfo }

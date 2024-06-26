@@ -10,27 +10,28 @@ import TIMG02 from "@images/t-02.png"
 import TIMG03 from "@images/t-03.png"
 import { useTranslation } from "react-i18next"
 import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
-import { useBalance, useContractWrite, useContractRead } from "wagmi"
+import { useBalance, useContractWrite, useAccount } from "wagmi"
 import { parseEther } from 'viem'
 import { atbConfig, withdarwConfig } from "@/lib/contract"
 import { useContractUserATBBalance } from "@/hooks/usdt"
+import { getSignData,getIncome } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
 
 export default function Service() {
     const { t } = useTranslation()
+    const { address } = useAccount()
     const [ amount, setAmount ] = useState(0)
+    const [ incomeInfo, setIncomeInfo ] = useState<any>({})
     const { data:pleData, isLoading: pleLoading, isSuccess: pleIssuccess, write: transfer } = useContractWrite({
         ...atbConfig,
         functionName: "transfer",
     })
-    
-    const { data:usdtData, isLoading: usdtLoading, isSuccess: usdtIssuccess, write: withdrawPermit } = useContractWrite({
+    const { data:usdtData, isLoading: usdtLoading, isSuccess: usdtIssuccess, write: withdrawPermit, } = useContractWrite({
         ...withdarwConfig,
         functionName: "withdrawPermit",
     })
 
     const { userBalance } = useContractUserATBBalance()
-    console.log(userBalance)
     const [addData,setAddData] = useState({ isShow: false, title: '',  status: 0, msg: '' })
 
     useEffect(()=>{
@@ -38,10 +39,17 @@ export default function Service() {
             setAmount(0)
             setAddData({ title: "", isShow: true, status: 0, msg: "质押成功" })
         }
-        if(usdtLoading){
+        if(usdtIssuccess){
             setAddData({ title: "", isShow: true, status: 0, msg: "领取成功"})
         }
-    },[pleIssuccess,usdtLoading])
+    },[pleIssuccess,usdtIssuccess])
+
+    useEffect(()=>{
+        if(address){
+            handleGetIncomeInfo()
+        }
+    },[address])
+    
 
     //质押
     const handlePledge = async () => {
@@ -54,33 +62,56 @@ export default function Service() {
 
     //领取USDT
     const handleReceiveUSDT = async() => {
-        let _wid = 1719389101
-        let _wAmt = "101"
-        let _tokenAddr = "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}`
-        let _deadline = "1719395101"
-        let r = "0x7c543fe9dcdcbe47a0957ce236f79226a78a81f2457eb84cb5a2bbccd8d4cc9b"
-        let s = "0x20685f2072580e0f691bf48cda8880c7b7fb06f9eb3f5178c31304e4a1250dcc"
-        let v = 27
-        withdrawPermit({
-            args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+        if(!address) return
+        let { data, code } = await getSignData({
+            address: address,
+            typeStatus: "USDT"
         })
+        if(code == 200){
+            let _wid = data.wId
+            let _wAmt = data.wAmt
+            let _tokenAddr = data.tokenAddress as `0x${string}`
+            let _deadline = data.timeStamp
+            let r = data.sig.r
+            let s = data.sig.s
+            let v = data.sig.v
+            withdrawPermit({
+                args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+            })
+        }
     }
 
     //领取ATB
     const handleReceiveATB = async() => {
-        let _wid = 1719389127
-        let _wAmt = "101"
-        let _tokenAddr = "0x5ec2f367AFDE60E6EB958870e734C98cDb189fFF" as `0x${string}`
-        let _deadline = 1719395127
-        let r = "0xc9def35a906a12147db632097dd740fbbd9a8e33b19e80e2d0664712445a09fb"
-        let s = "0x4875956fa4beb83a86d9648de3b73931e4e3f4c4b3097670795ca893bf669fb0"
-        let v = 28
-
-        withdrawPermit({
-            args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+        if(!address) return
+        let { data, code } = await getSignData({
+            address: address,
+            typeStatus: "ATB"
         })
+        if(code == 200){
+            let _wid = data.wId
+            let _wAmt = data.wAmt
+            let _tokenAddr = data.tokenAddress as `0x${string}`
+            let _deadline = data.timeStamp
+            let r = data.sig.r
+            let s = data.sig.s
+            let v = data.sig.v
+            withdrawPermit({
+                args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+            })
+        }
         
-    }   
+    }
+    
+    //获取收益信息
+    const handleGetIncomeInfo = async() => {
+        let {data,code} = await getIncome({
+            address
+        })
+        if(code == 200){
+            setIncomeInfo(data)
+        }
+    }
 
     const inputChange = (e:any)=>{
         setAmount(e.target.value)
@@ -115,7 +146,7 @@ export default function Service() {
                                             />
                                             <span className="text-xs sm:text-xl">ATB余额:</span>
                                         </div>
-                                        <div className="text-base font-bold sm:text-2xl">{ userBalance }</div>
+                                        <div className="text-base font-bold sm:text-2xl">{ userBalance.toFixed(2) }</div>
                                     </div>
                                     <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5">
                                         <div className="flex items-center">
@@ -127,7 +158,7 @@ export default function Service() {
                                             />
                                             <span className="text-xs sm:text-xl">ATR超算机器人等级:</span>
                                         </div>
-                                        <div className="text-base font-bold sm:text-2xl">0</div>
+                                        <div className="text-base font-bold sm:text-2xl">{ incomeInfo?.atb_bot_level || 0 }</div>
                                     </div>
                                 </div>
                                 <Image
@@ -202,7 +233,7 @@ export default function Service() {
                                         />
                                         <span className="text-xs sm:text-xl font-bold">总收益(USDT)：</span>
                                     </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                    <div className="text-base font-bold sm:text-2xl">{ incomeInfo?.rewardAmountUsdt || 0.00 }</div>
                                 </div>
                             </Grid>
                             <Grid item xs={12} lg={4} className="flex justify-center">
@@ -216,7 +247,7 @@ export default function Service() {
                                         />
                                         <span className="text-xs sm:text-xl font-bold">已产出(USDT)：</span>
                                     </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                    <div className="text-base font-bold sm:text-2xl">{incomeInfo?.grossStaticUsdt || 0.00}</div>
                                 </div>
                             </Grid>
                             <Grid item xs={12} lg={4} className="flex justify-center">
@@ -230,7 +261,7 @@ export default function Service() {
                                         />
                                         <span className="text-xs sm:text-xl font-bold">已领取(USDT)：</span>
                                     </div>
-                                    <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                    <div className="text-base font-bold sm:text-2xl">{incomeInfo?.alreadyIncomeUsdt || 0.00}</div>
                                 </div>
                             </Grid>
                         </Grid>
@@ -251,25 +282,25 @@ export default function Service() {
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">已质押ATB数量：</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo.atbInAmount || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">预计收益ATB：</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.estimatedAtbAmount || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">今日产出ATB：</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.dayIncomeAtb || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">累积领取ATB：</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.alreadyIncomeAtb || 0.00}</div>
                             </div>
                         </div>            
                     </Grid>
@@ -280,25 +311,25 @@ export default function Service() {
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">平均质押价格(USDT):</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.atbPrice || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">预计收益(USDT):</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.estimatedAtbUsdt || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">今日可领取收益(USDT):</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.dayIncomeAtbUsdt || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
                                     <span className="text-xs sm:text-lg">累积领取收益(USDT):</span>
                                 </div>
-                                <div className="text-base sm:text-xl">0.00</div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.sumAtbPrice || 0.00}</div>
                             </div>
                         </div> 
                     </Grid>
@@ -306,7 +337,7 @@ export default function Service() {
                 <div className="bg-[#131C20] mt-5 mb-5">
                     <div className="px-5 py-5 sm:px-10 text-base font-bold sm:text-lg flex flex-col justify-center items-center">
                         <span className="text-[#E1146D]">已领取总收益（枚）</span>
-                        <span className="mt-2 sm:mt-5">20≈80USDT</span>
+                        <span className="mt-2 sm:mt-5">{incomeInfo?.alreadyIncomeAtb || 0}≈80USDT</span>
                     </div>
                     <div 
                         className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center 

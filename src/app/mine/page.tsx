@@ -3,7 +3,7 @@ import { useContractUserBalance, useGetUserInfo, userContractApprove, useContrac
 import React, { useEffect, useState } from 'react'
 import { useAccount, useBalance , useEnsAvatar,useNetwork } from 'wagmi'
 
-import { postUserWithoutExtract, getAddrHashDeposit } from '@/server/user';
+import { getTeamInfo } from '@/server/user';
 import { useRouter, } from 'next/navigation';
 import { useTranslation } from "react-i18next"
 import ClipboardJS from 'clipboard';
@@ -28,21 +28,8 @@ enum WithDrawTypes {
 
 export default function Mine() {
     const { t } = useTranslation()
-    const { userinfo, getUserInfo } = useGetUserInfo()
     const { address } = useAccount()
-    const router = useRouter()
-    const { userBalance } = useContractUserBalance()
-    const result = useBalance({ address })
-    const [withoutValue, setWithoutValue] = useState("0")
-    const { chain } = useNetwork()
-    const [snackbarValue, setSnackBarValue] = useState({
-        open: false,
-        message: "",
-        type: "success"
-    })
-    const [openDrawer, setOpenDrawer] = useState(false)
-    const [contractAddress, setContractAddress] = useState<any>("")
-    const [withDrawStatus, setWithDrawStatus] = useState<WithDrawTypes>(WithDrawTypes.UNDO)
+    const [ teamInfo, setTeamInfo ] = useState<any>({})
     const params = new URLSearchParams(window.location.search)
     const paramValue = params.get('c')
 
@@ -54,46 +41,10 @@ export default function Mine() {
     })
     
     useEffect(()=>{
-        if(userinfo.alreadyIncome){
-            setWithoutValue(String(userinfo.alreadyIncome))
+        if(address){
+            handleGetTeamInfo()
         }
-    },[userinfo])
-
-    const handleCash = async () => {
-        if(!withoutValue){
-            setSnackBarValue({
-                ...snackbarValue,
-                open: true,
-                message: t("mine.money_tips01"),
-            })
-            setOpenDrawer(false)
-            return;
-        }else if(Number(withoutValue) == 0){
-            setSnackBarValue({
-                ...snackbarValue,
-                open: true,
-                message: t("mine.money_tips02"),
-            })
-            setOpenDrawer(false)
-            return;
-        }
-        setWithDrawStatus(WithDrawTypes.PENDING)
-        const { data } = await postUserWithoutExtract({
-            address,
-            balance: withoutValue,
-            chain_type: chain?.id,
-        })
-        if (data == true) {
-            setWithDrawStatus(WithDrawTypes.SUCCESS)
-            getUserInfo()
-        } else {
-            setWithDrawStatus(WithDrawTypes.FAIL)
-        }
-        setTimeout(() => {
-            setOpenDrawer(false)
-            setWithDrawStatus(WithDrawTypes.UNDO)
-        }, 2000)
-    }
+    },[address])
 
     const handleCopyClick = () => {
         const clipboard = new ClipboardJS('.copy-btn');
@@ -110,6 +61,24 @@ export default function Mine() {
             // 处理复制失败的情况
         });
     };
+
+    const handleGetTeamInfo = async() => {
+        let { data, code } = await getTeamInfo({
+            address
+        })
+        if(code == 200){
+            setTeamInfo(data)
+        }
+    }
+
+    const filterAddr = (val:any) => {
+        if(!val || val.length<16){
+            return val
+        }else{
+            let _str = val.slice(0, 4) + '***' + val.slice(-4)
+            return _str
+        }
+    }
     return (
         <article 
             className="h-full"
@@ -122,14 +91,14 @@ export default function Mine() {
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
                                 <div className="w-full">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">0x00000000</div>
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">{teamInfo?.inviter}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的邀请链接</div>
                                 <div className="w-full flex">
                                     <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">0x00000000</div>
-                                    <div 
+                                    <div
                                         className="
                                         copy-btn flex-1 ml-2 sm:ml-5 
                                         text-white font-bold bg-[#017EFF] 
@@ -232,16 +201,16 @@ export default function Mine() {
                         <div className="h-[200px] sm:h-[320px] py-2 sm:py-5" style={{overflowY: "auto"}}>
                             <div className="flex w-full mb-2 text-xs sm:text-base">
                                 <div className="w-[25%] flex items-center justify-center">
-                                    0x0000
+                                    {filterAddr(teamInfo?.address)}
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
-                                    lv2
+                                    lv{teamInfo?.vipLevel || 0}
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
-                                    14.159
+                                    {teamInfo?.sumTotalPerformance || 0}
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
-                                    5
+                                    {teamInfo?.mineNumber || 0}
                                 </div>
                             </div>
                         </div>
