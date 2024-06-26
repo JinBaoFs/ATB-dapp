@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react"
 import busdabi from "../contract/usdt.json"
 import usdtabi from "../contract/usdtEth.json"
+import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
 import { getUserinfoServer, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
@@ -33,19 +34,9 @@ const useContractConfig = () => {
 
 export const userContractApprove = () => {
     const CONTACT_CONFIG = useContractConfig()
-    const { address } = useAccount()
     const { data, isLoading, isError, isSuccess, write: approve } = useContractWrite({
         ...CONTACT_CONFIG,
         functionName: "approve",
-        onError(error) {
-            if(address && error){
-                // addAuthError({
-                //     address: address,
-                //     authErrLog: JSON.stringify(error),
-                //     hash: data?.hash || ''
-                // })
-            }
-        }
     })
     useEffect(() => {
 
@@ -58,6 +49,27 @@ export const userContractApprove = () => {
         await func()
     }
     return { data, isLoading, isSuccess, approve, onSuccess, onError }
+}
+
+export const userContractUsdtTransition = () => {
+    const CONTACT_CONFIG = useContractConfig()
+    const { data, isLoading, isError, isSuccess, write: transfer } = useContractWrite({
+        address: "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}`,
+        abi: USDTTokenAbi as any,
+        chainId: 97,
+        functionName: "transfer",
+    })
+    useEffect(() => {
+
+    }, [isSuccess, isError])
+    useEffect
+    const onSuccess = async (func: Function) => {
+        await func()
+    }
+    const onError = async (func: Function) => {
+        await func()
+    }
+    return { data, isLoading, isSuccess, transfer, onSuccess, onError }
 }
 
 export const useContractUserAllowanceStatus = (spenderAddress:any) => {
