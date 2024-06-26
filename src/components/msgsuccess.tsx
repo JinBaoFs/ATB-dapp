@@ -21,20 +21,19 @@ export default function MsgSuccess({isShow,title,status,msg,reset}:any){
             }}
             onClick={(event)=>{event.stopPropagation();setMsgShow(false);reset()}}
         >
-            <div className="flex-col rounded-[10px] w-[70%] sm:w-[800px] bg-[#131C20]">
+            <div className="flex-col rounded-[10px] w-[90%] sm:w-[800px] bg-[#131C20]">
                 <div className="text-[#fff] p-6 flex flex-col">
                     <Image
                         src={
                           status == "0" ? SuccessIcon : FailIcon
                         }
-                        width={45}
-                        height={45}
                         alt=""
-                        className='m-auto mb-3'
+                        style={{height:"fit-content"}}
+                        className='w-[42px] sm:[w-67px] m-auto py-5 sm:py-8'
                     />
-                    <div className="text-center mb-5">{ msg }</div>
+                    <div className="text-center mb-2 sm:mb-5">{ msg }</div>
                 </div>
-                <div className="bg-[#017EFF]">确定</div>
+                <div className="bg-[#017EFF] font-bold text-center py-3 sm:py-5 text-base sm:text-lg cursor-pointer" style={{userSelect: "none"}}>确定</div>
             </div>
         </div>
     )
