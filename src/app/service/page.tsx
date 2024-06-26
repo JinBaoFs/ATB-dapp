@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React,{ useEffect, useState } from 'react'
 import Image from "next/image"
 import ATBIMG from "@images/ATB.png"
 import HOMEIMG02 from "@images/home-02.png"
@@ -10,10 +10,81 @@ import TIMG02 from "@images/t-02.png"
 import TIMG03 from "@images/t-03.png"
 import { useTranslation } from "react-i18next"
 import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
-import "./page.css"
+import { useBalance, useContractWrite, useContractRead } from "wagmi"
+import { parseEther } from 'viem'
+import { atbConfig, withdarwConfig } from "@/lib/contract"
+import { useContractUserATBBalance } from "@/hooks/usdt"
+import MsgSuccess from '@/components/msgsuccess';
 
 export default function Service() {
     const { t } = useTranslation()
+    const [ amount, setAmount ] = useState(0)
+    const { data:pleData, isLoading: pleLoading, isSuccess: pleIssuccess, write: transfer } = useContractWrite({
+        ...atbConfig,
+        functionName: "transfer",
+    })
+    
+    const { data:usdtData, isLoading: usdtLoading, isSuccess: usdtIssuccess, write: withdrawPermit } = useContractWrite({
+        ...withdarwConfig,
+        functionName: "withdrawPermit",
+    })
+
+    const { userBalance } = useContractUserATBBalance()
+    console.log(userBalance)
+    const [addData,setAddData] = useState({ isShow: false, title: '',  status: 0, msg: '' })
+
+    useEffect(()=>{
+        if(pleIssuccess){
+            setAmount(0)
+            setAddData({ title: "", isShow: true, status: 0, msg: "质押成功" })
+        }
+        if(usdtLoading){
+            setAddData({ title: "", isShow: true, status: 0, msg: "领取成功"})
+        }
+    },[pleIssuccess,usdtLoading])
+
+    //质押
+    const handlePledge = async () => {
+        let _address = "0xE6473e0463E726b99f28c7280118FF950a4Ad903" as `0x${string}`
+        let _amount = parseEther(String(amount))
+        transfer({
+            args:[_address,_amount]
+        })
+    }
+
+    //领取USDT
+    const handleReceiveUSDT = async() => {
+        let _wid = 1719389101
+        let _wAmt = "101"
+        let _tokenAddr = "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}`
+        let _deadline = "1719395101"
+        let r = "0x7c543fe9dcdcbe47a0957ce236f79226a78a81f2457eb84cb5a2bbccd8d4cc9b"
+        let s = "0x20685f2072580e0f691bf48cda8880c7b7fb06f9eb3f5178c31304e4a1250dcc"
+        let v = 27
+        withdrawPermit({
+            args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+        })
+    }
+
+    //领取ATB
+    const handleReceiveATB = async() => {
+        let _wid = 1719389127
+        let _wAmt = "101"
+        let _tokenAddr = "0x5ec2f367AFDE60E6EB958870e734C98cDb189fFF" as `0x${string}`
+        let _deadline = 1719395127
+        let r = "0xc9def35a906a12147db632097dd740fbbd9a8e33b19e80e2d0664712445a09fb"
+        let s = "0x4875956fa4beb83a86d9648de3b73931e4e3f4c4b3097670795ca893bf669fb0"
+        let v = 28
+
+        withdrawPermit({
+            args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
+        })
+        
+    }   
+
+    const inputChange = (e:any)=>{
+        setAmount(e.target.value)
+    }
     return (
         <article 
             className="h-full"
@@ -44,7 +115,7 @@ export default function Service() {
                                             />
                                             <span className="text-xs sm:text-xl">ATB余额:</span>
                                         </div>
-                                        <div className="text-base font-bold sm:text-2xl">0.00</div>
+                                        <div className="text-base font-bold sm:text-2xl">{ userBalance }</div>
                                     </div>
                                     <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5">
                                         <div className="flex items-center">
@@ -92,13 +163,27 @@ export default function Service() {
                                             borderColor: "none",
                                             fontSize: "1rem"
                                         }}
+                                        value={amount}
                                         placeholder="请输入ATB数量"
                                         inputProps={{ 'aria-label': 'search google maps' }}
+                                        onChange={inputChange}
                                     />
-                                    <div className="bg-[#E1146E] h-full w-[60px] sm:w-[80px] flex items-center justify-center cursor-pointer text-xs sm:text-base">MAX</div>
+                                    <div 
+                                        className="bg-[#E1146E] h-full w-[60px] sm:w-[80px] 
+                                        flex items-center justify-center 
+                                        cursor-pointer text-xs sm:text-base"
+                                        onClick={()=>{setAmount(Number(userBalance))}}
+                                    >MAX</div>
                                 </Paper>
                             </div>
-                            <div className="text-white font-bold bg-[#017EFF] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer mt-5 sm:mt-12 text-base sm:text-2xl">质押</div>
+                            <div 
+                                className="text-white font-bold bg-[#017EFF] 
+                                h-12 sm:h-[70px] flex justify-center items-center cursor-pointer mt-5 sm:mt-12 
+                                text-base sm:text-2xl"
+                                onClick={handlePledge}
+                            >
+                                质押
+                            </div>
                         </div>
                     </Grid>
                 </Grid>
@@ -150,7 +235,13 @@ export default function Service() {
                             </Grid>
                         </Grid>
                     </div>
-                    <div className="text-white font-bold bg-[#026451] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-12 text-base sm:text-2xl">领取USDT</div>
+                    <div 
+                        className="text-white font-bold bg-[#026451] h-12 sm:h-[70px] 
+                        flex justify-center items-center cursor-pointer sm:mt-12 text-base sm:text-2xl"
+                        onClick={handleReceiveUSDT}
+                    >
+                        领取USDT
+                    </div>
                 </div>
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={6} className="flex justify-center">
@@ -217,10 +308,17 @@ export default function Service() {
                         <span className="text-[#E1146D]">已领取总收益（枚）</span>
                         <span className="mt-2 sm:mt-5">20≈80USDT</span>
                     </div>
-                    <div className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center items-center cursor-pointer sm:mt-2 text-base sm:text-2xl">领取收益</div>
+                    <div 
+                        className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center 
+                        items-center cursor-pointer sm:mt-2 text-base sm:text-2xl"
+                        onClick={handleReceiveATB}
+                    >
+                        领取收益
+                    </div>
                 </div>
                 <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">说明: 金本位+币本位2倍出局，奖励随时领取每日按照持仓数量产出1%</div>
             </article>
+            <MsgSuccess isShow={addData.isShow} title={addData.title} status={addData.status} msg={addData.msg} reset={ ()=>{setAddData({...addData,isShow: false})} } />
         </article>
     )
 }

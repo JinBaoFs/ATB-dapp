@@ -5,6 +5,7 @@ import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
 import { getUserinfoServer, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
+import { atbConfig } from "@/lib/contract"
 
 
 const useContractConfig = () => {
@@ -52,7 +53,6 @@ export const userContractApprove = () => {
 }
 
 export const userContractUsdtTransition = () => {
-    const CONTACT_CONFIG = useContractConfig()
     const { data, isLoading, isError, isSuccess, write: transfer } = useContractWrite({
         address: "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}`,
         abi: USDTTokenAbi as any,
@@ -131,6 +131,32 @@ export const useContractUserBalance = () => {
                 divisor = Math.pow(10, 18);
             }
             
+            const adjustedBalance = Number(balance) / divisor;
+            setUserBalance(adjustedBalance || 0)
+        }
+        setBalanceLoading(false)
+    }, [balance, address])
+    return { userBalance, balanceLoading }
+}
+
+export const useContractUserATBBalance = () => {
+    const { address } = useAccount()
+    const [userBalance, setUserBalance] = useState(0)
+    const [balanceLoading, setBalanceLoading] = useState(true)
+    const { data: balance, isLoading: loading, isError: error } = useContractRead({
+        ...atbConfig,
+        functionName: "balanceOf",
+        args: [address],
+        watch: true,
+    })
+    useEffect(() => {
+        setBalanceLoading(true)
+        if (!address) {
+            setUserBalance(0)
+        } else {
+            // 将balance减小十的18次方
+            let divisor
+            divisor = Math.pow(10, 18);
             const adjustedBalance = Number(balance) / divisor;
             setUserBalance(adjustedBalance || 0)
         }
