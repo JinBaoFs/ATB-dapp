@@ -30,6 +30,7 @@ export default function Mine() {
     const { t } = useTranslation()
     const { address } = useAccount()
     const [ teamInfo, setTeamInfo ] = useState<any>({})
+    const [ shareLink, setShareLink ] = useState<any>("")
     const params = new URLSearchParams(window.location.search)
     const paramValue = params.get('c')
 
@@ -39,12 +40,18 @@ export default function Mine() {
         status: 0,
         msg: ''
     })
+
     
     useEffect(()=>{
         if(address){
             handleGetTeamInfo()
         }
     },[address])
+
+    useEffect(()=>{
+        const fullUrl = window.location.href.slice(0,-4);
+        setShareLink(`${fullUrl}?address=${address}`)
+    },[])
 
     const handleCopyClick = () => {
         const clipboard = new ClipboardJS('.copy-btn');
@@ -97,14 +104,14 @@ export default function Mine() {
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的邀请链接</div>
                                 <div className="w-full flex">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">0x00000000</div>
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3 truncate">{ shareLink }</div>
                                     <div
                                         className="
                                         copy-btn flex-1 ml-2 sm:ml-5 
                                         text-white font-bold bg-[#017EFF] 
                                         flex justify-center items-center 
                                         cursor-pointer text-base sm:text-xl"
-                                        data-clipboard-text="Hello, world!" 
+                                        data-clipboard-text={shareLink}
                                         onClick={handleCopyClick}
                                     >复制</div>
                                 </div>
@@ -201,7 +208,7 @@ export default function Mine() {
                         <div className="h-[200px] sm:h-[320px] py-2 sm:py-5" style={{overflowY: "auto"}}>
                             <div className="flex w-full mb-2 text-xs sm:text-base">
                                 <div className="w-[25%] flex items-center justify-center">
-                                    {filterAddr(teamInfo?.address)}
+                                    {filterAddr(address)}
                                 </div>
                                 <div className="w-[25%] flex items-center justify-center">
                                     lv{teamInfo?.vipLevel || 0}
