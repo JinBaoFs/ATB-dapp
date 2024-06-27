@@ -98,7 +98,7 @@ export default function Mine() {
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
                                 <div className="w-full">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3">{teamInfo?.inviter}</div>
+                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3 truncate">{teamInfo?.inviter}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col py-2"> 

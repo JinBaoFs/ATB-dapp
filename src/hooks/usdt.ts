@@ -180,12 +180,12 @@ export const useGetUserInfo = () => {
         address
     })
     const params = new URLSearchParams(window.location.search);
-    const paramValue = params.get('c');
+    const paramValue = params.get('address');
     const registerUser = async () => {
-        if (balanceLoading || !address) return
+        if (balanceLoading || !address || !paramValue) return
         await postUseRregister({
             address,
-            inviter: "0x0"
+            inviter: paramValue || "0x4203a0A978DedeB9e49F5B18d902E9c19D3bDcDd"
         })
     }
     const getUserInfo = async () => {

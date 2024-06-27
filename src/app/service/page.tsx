@@ -38,9 +38,11 @@ export default function Service() {
         if(pleIssuccess){
             setAmount(0)
             setAddData({ title: "", isShow: true, status: 0, msg: "质押成功" })
+            handleGetIncomeInfo()
         }
-        if(usdtIssuccess){
+        if(usdtIssuccess && !usdtLoading){
             setAddData({ title: "", isShow: true, status: 0, msg: "领取成功"})
+            handleGetIncomeInfo()
         }
     },[pleIssuccess,usdtIssuccess])
 
@@ -49,7 +51,7 @@ export default function Service() {
             handleGetIncomeInfo()
         }
     },[address])
-    
+
 
     //质押
     const handlePledge = async () => {
