@@ -23,7 +23,7 @@ import Image from "next/image"
 
 
 const { chains, publicClient } = configureChains(
-    [bscTestnet,bsc],
+    [bsc],
     [
         publicProvider()
     ]
@@ -74,7 +74,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WagmiConfig config={wagmiConfig}>
             <RainbowKitProvider avatar={CustomAvatar}  theme={darkTheme({
                 ...darkTheme.accentColors.blue,
-            })} chains={chains} appInfo={demoAppInfo} initialChain={bscTestnet}>
+            })} chains={chains} appInfo={demoAppInfo} initialChain={bsc}>
                 {mounted && children}
             </RainbowKitProvider>
         </WagmiConfig>

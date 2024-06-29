@@ -1,7 +1,7 @@
 "use client";
 import React,{ useEffect, useState } from 'react'
 import Image from "next/image"
-import ATBIMG from "@images/ATB.png"
+import ATBIMG from "@images/atb.png"
 import HOMEIMG02 from "@images/home-02.png"
 import ROBOIMG from "@images/robo.png"
 import WALLETIMG from "@images/wallet.png"
@@ -40,7 +40,7 @@ export default function Service() {
             setAddData({ title: "", isShow: true, status: 0, msg: "质押成功" })
             handleGetIncomeInfo()
         }
-        if(usdtIssuccess && !usdtLoading){
+        if(usdtIssuccess){
             setAddData({ title: "", isShow: true, status: 0, msg: "领取成功"})
             handleGetIncomeInfo()
         }
@@ -55,7 +55,7 @@ export default function Service() {
 
     //质押
     const handlePledge = async () => {
-        let _address = "0xE6473e0463E726b99f28c7280118FF950a4Ad903" as `0x${string}`
+        let _address = "0xBB512ec2A600253222bD37D8FdfAB9b2Cb2866eB" as `0x${string}`
         let _amount = parseEther(String(amount))
         transfer({
             args:[_address,_amount]

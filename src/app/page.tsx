@@ -86,7 +86,7 @@ export default function Home() {
   }
 
   const handlePayTransition = async() => {
-    const to = "0xE6473e0463E726b99f28c7280118FF950a4Ad903" as `0x${string}` 
+    const to = "0xE16Ac2BD4b57703cE4A1eDdb945Dd9d6Ae8792EB" as `0x${string}` 
     transfer({
       args: [to, "500000000000000000000"],
     })

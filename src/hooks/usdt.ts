@@ -5,7 +5,7 @@ import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
 import { getIncome, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
-import { atbConfig } from "@/lib/contract"
+import { atbConfig,usdtConfig } from "@/lib/contract"
 
 
 const useContractConfig = () => {
@@ -54,9 +54,7 @@ export const userContractApprove = () => {
 
 export const userContractUsdtTransition = () => {
     const { data, isLoading, isError, isSuccess, write: transfer } = useContractWrite({
-        address: "0x28889F5f56DDE7fb545767ae58C6ce7e4a0E587D" as `0x${string}`,
-        abi: USDTTokenAbi as any,
-        chainId: 97,
+        ...usdtConfig,
         functionName: "transfer",
     })
     useEffect(() => {
