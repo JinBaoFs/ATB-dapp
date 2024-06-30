@@ -33,6 +33,7 @@ export default function Service() {
 
     const { userBalance } = useContractUserATBBalance()
     const [addData,setAddData] = useState({ isShow: false, title: '',  status: 0, msg: '' })
+    const [snackbarValue, setSnackbarValue] = useState({ open: false, message: ""})
 
     useEffect(()=>{
         if(pleIssuccess){
@@ -55,6 +56,10 @@ export default function Service() {
 
     //质押
     const handlePledge = async () => {
+        if(userBalance<amount){
+            setSnackbarValue({ open: true, message: "余额不足",})
+            return
+        }
         let _address = "0xBB512ec2A600253222bD37D8FdfAB9b2Cb2866eB" as `0x${string}`
         let _amount = parseEther(String(amount))
         transfer({
@@ -351,6 +356,19 @@ export default function Service() {
                 </div>
                 <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">说明: 金本位+币本位2倍出局，奖励随时领取每日按照持仓数量产出1%</div>
             </article>
+            <Snackbar
+                open={snackbarValue.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                onClose={() => {
+                setSnackbarValue({
+                    ...snackbarValue,
+                    open: false,
+                    message: ""
+                })
+                }}
+                message={snackbarValue.message}
+            />
             <MsgSuccess isShow={addData.isShow} title={addData.title} status={addData.status} msg={addData.msg} reset={ ()=>{setAddData({...addData,isShow: false})} } />
         </article>
     )

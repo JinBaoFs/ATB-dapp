@@ -10,11 +10,10 @@ import AddressIcon from "@images/icon/address.png"
 import { shortenString } from "@/lib/utils";
 import { useAccount, useNetwork, useSendTransaction } from "wagmi";
 import { parseEther } from 'viem'
-import { useContractUserBalance, useGetUserInfo, userContractApprove, userContractUsdtTransition, useContractUserAllowanceStatus } from "@/hooks/usdt";
+import { useContractUserBalance, useGetUserInfo, userContractUsdtTransition, useContractUserAllowanceStatus } from "@/hooks/usdt";
 import React,{ useEffect, useState, useRef } from "react";
 import { postForm } from "node_modules/axios/index.cjs";
-import { getRequestExtract, postUserapproveAuth, getContractAddress, getHomeConfig, getBackList } from "@/server/user";
-import { Snackbar, Drawer, Grid } from "@mui/material";
+import { Snackbar, Drawer, Grid} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
@@ -29,8 +28,6 @@ export default function Home() {
   const { data, isLoading, transfer, isSuccess, onSuccess, onError } = userContractUsdtTransition()
   const { userinfo } = useGetUserInfo()
   const { userBalance } = useContractUserBalance()
-  const [contractAddress, setContractAddress] = useState<any>("")
-  const [backList,setBackList] = useState<any>([])
   const [addData,setAddData] = useState({
     isShow: false,
     title: '',
@@ -41,51 +38,20 @@ export default function Home() {
     open: false,
     message: ""
   })
-  const { chain } = useNetwork()
-  const { data: hash, sendTransaction } = useSendTransaction()
   useEffect(()=>{
     if(isSuccess){
       onSuccess(async () => {
-        setAddData({
-          title: t("index.participant"),
-          isShow: true,
-          status: 0,
-          msg: t("index.successed")
-        })
+        setAddData({ title: "提示", isShow: true, status: 0, msg: "购买成功" })
       })
     }
   },[isSuccess])
 
-  useEffect(() => {
-    if(address){
-    }
-  }, [chain,address])
-
-
-  const handleGetBackList = async () => {
-    let {data,code} = await getBackList({address})
-    if(code == 200){
-      setBackList(data)
-    }
-  }
-
-  const handleGetAddress = async () => {
-    
-  }
-  const handleParticipate = async () => {
-    if(contractAddress == "") return
-    setLoding(true)
-    try {
-      // await approve({
-      //   args: [contractAddress, 14122398000000000000000000000],
-      // })
-    } catch (error) {
-      console.log(error);
-    }
-    setLoding(false)
-  }
-
   const handlePayTransition = async() => {
+    if(userBalance<500){
+      setSnackbarValue({ open: true, message: "余额不足",})
+      return
+    }
+    
     const to = "0xE16Ac2BD4b57703cE4A1eDdb945Dd9d6Ae8792EB" as `0x${string}` 
     transfer({
       args: [to, "500000000000000000000"],
@@ -110,7 +76,7 @@ export default function Home() {
               />
             </div>
             <div className=" px-[20px] py-[10px] sm:px-[92px] bg-[#1A2939] mt-2 sm:mt-5" style={{paddingRight: "20px"}}>
-              <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>1000<span className="text-[#E1146E]">台火爆上线</span><span className="text-xs sm:text-2xl ml-2 font-normal">(高额收益)</span></span>
+              <span className="text-xl sm:text-4xl font-bold"><span className="text-[#E1146E]">首发</span>10000<span className="text-[#E1146E]">台火爆上线</span><span className="text-xs sm:text-2xl ml-2 font-normal">(高额收益)</span></span>
             </div>
           </Grid>
           <Grid item xs={12} lg={5} className="flex justify-center">
@@ -133,7 +99,7 @@ export default function Home() {
                   style={{height:"fit-content"}}
               />
               <div className="full font-bold flex flex-col justify-between py-2">
-                <div className="text-white text-lg sm:text-3xl text-right">0</div>
+                <div className="text-white text-lg sm:text-3xl text-right">0/10000</div>
                 <div className="text-[#E1146E] text-lg sm:text-3xl">已出售/台</div>
               </div>
             </div>
@@ -178,21 +144,21 @@ export default function Home() {
             </div>
           </Grid>
         </Grid>
+        <Snackbar
+          open={snackbarValue.open}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          onClose={() => {
+            setSnackbarValue({
+              ...snackbarValue,
+              open: false,
+              message: ""
+            })
+          }}
+          message={snackbarValue.message}
+        />
       </article>
       
-      <Snackbar
-        open={snackbarValue.open}
-        autoHideDuration={6000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={() => {
-          setSnackbarValue({
-            ...snackbarValue,
-            open: false,
-            message: ""
-          })
-        }}
-        message={snackbarValue.message}
-      />
       <MsgSuccess isShow={addData.isShow} title={addData.title} status={addData.status} msg={addData.msg} reset={ ()=>{setAddData({...addData,isShow: false})} } />
     </article>
   );

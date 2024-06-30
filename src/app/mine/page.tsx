@@ -51,7 +51,7 @@ export default function Mine() {
     useEffect(()=>{
         const fullUrl = window.location.href.slice(0,-4);
         setShareLink(`${fullUrl}?address=${address}`)
-    },[])
+    },[address])
 
     const handleCopyClick = () => {
         const clipboard = new ClipboardJS('.copy-btn');
@@ -94,23 +94,23 @@ export default function Mine() {
             <article className="w-full mt-[80px] px-4 sm:px-20">
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={6}>
-                        <div className="w-full bg-[#131C20] py-5 px-5 sm:px-8 sm:py-8">
+                        <div className="w-full bg-[#131C20] py-5 px-3 sm:px-8 sm:py-8">
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
                                 <div className="w-full">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3 truncate">{teamInfo?.inviter}</div>
+                                    <div className="bg-[#1C282F] text-xs sm:text-lg w-[100%] sm:w-[80%] p-3 sm:p-3">{teamInfo?.inviter}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的邀请链接</div>
                                 <div className="w-full flex">
-                                    <div className="bg-[#1C282F] text-base sm:text-lg w-[65%] sm:w-[80%] p-2 sm:p-3 truncate">{ shareLink }</div>
+                                    <div className="bg-[#1C282F] text-xs sm:text-lg w-[70%] sm:w-[80%] p-3 sm:p-3 truncate">{ shareLink }</div>
                                     <div
                                         className="
                                         copy-btn flex-1 ml-2 sm:ml-5 
                                         text-white font-bold bg-[#017EFF] 
                                         flex justify-center items-center 
-                                        cursor-pointer text-base sm:text-xl"
+                                        cursor-pointer text-xs sm:text-xl"
                                         data-clipboard-text={shareLink}
                                         onClick={handleCopyClick}
                                     >复制</div>
@@ -123,7 +123,7 @@ export default function Mine() {
                             <div className="#283C43 flex justify-between items-center bg-[#283C43] py-3 sm:py-5 px-5 sm:px-8">
                                 <div className="text-[#E1146E] text-base sm:text-xl font-bold">当前节点等级(星):</div>
                                 <div className="flex items-center">
-                                    { [1,2].map((item,idx)=>{
+                                    { Array(teamInfo?.vipLevel || 0).fill("").map((item,idx)=>{
                                         return (
                                             <Image
                                                 src={XIMG}
@@ -144,13 +144,13 @@ export default function Mine() {
                                     <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
                                         <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>
                                     </div>
-                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">达成</span>
+                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">未达成</span>
                                 </div>
                                 <div className="flex justify-center items-center" style={{width: "50%"}}>
                                     <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
                                         <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%",background: "#000"}}></div>
                                     </div>
-                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">未达成</span>
+                                    <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">达成</span>
                                 </div>
                             </div>
                         </div>

@@ -104,13 +104,11 @@ export const useContractUserAllowanceStatus = (spenderAddress:any) => {
 }
 
 export const useContractUserBalance = () => {
-    const CONTACT_CONFIG = useContractConfig()
     const { address } = useAccount()
-    const { chain } = useNetwork()
     const [userBalance, setUserBalance] = useState(0)
     const [balanceLoading, setBalanceLoading] = useState(true)
     const { data: balance, isLoading: loading, isError: error } = useContractRead({
-        ...CONTACT_CONFIG,
+        ...usdtConfig,
         functionName: "balanceOf",
         args: [address],
         watch: true,
@@ -123,12 +121,7 @@ export const useContractUserBalance = () => {
         } else {
             // 将balance减小十的18次方
             let divisor
-            if(chain?.id == 1){
-                divisor = Math.pow(10, 6);
-            }else{
-                divisor = Math.pow(10, 18);
-            }
-            
+            divisor = Math.pow(10, 18);
             const adjustedBalance = Number(balance) / divisor;
             setUserBalance(adjustedBalance || 0)
         }

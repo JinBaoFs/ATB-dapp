@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useEffect, useState } from 'react'
+import React, { HTMLAttributes, useEffect, useState, useMemo } from 'react'
 import { useAccount } from 'wagmi'
 import WallectButton from './wallet/connect'
 import Image from "next/image";
@@ -43,6 +43,17 @@ export default function Header({ }: IHeaderProps) {
     const [ imgIndex, setImgIndex ] = useState(0)
     const [ open, setOpen ] = React.useState(false);
     const router = useRouter()
+
+    useEffect(()=>{
+        console.log(pathname)
+        if (pathname === '/mine') {
+            setValue(2)
+        } else if (pathname === '/service') {
+            setValue(1)
+        } else {
+            setValue(0)
+        }
+    },[pathname])
 
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
@@ -99,8 +110,8 @@ export default function Header({ }: IHeaderProps) {
     useEffect(()=>{
         if (typeof localStorage !== 'undefined') {
             let lang = localStorage.getItem("lang") || 'en'
-            let menuIndex = localStorage.getItem("menuTabIndex") || '0'
-            setValue(Number(menuIndex))
+            // let menuIndex = localStorage.getItem("menuTabIndex") || '0'
+            // setValue(Number(menuIndex))
             i18n.changeLanguage(lang)
         }
     },[])
@@ -127,11 +138,7 @@ export default function Header({ }: IHeaderProps) {
 
     const toPage = (newValue:number) => {
         setOpen(false)
-        if(newValue == value) return
         setValue(newValue)
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem("menuTabIndex",String(newValue))
-        }
         if(newValue == 0){
             router.push(`/`)
         }else if(newValue == 1){
