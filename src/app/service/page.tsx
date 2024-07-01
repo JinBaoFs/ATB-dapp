@@ -113,7 +113,7 @@ export default function Service() {
     //获取收益信息
     const handleGetIncomeInfo = async() => {
         let {data,code} = await getIncome({
-            address
+            address: "0x649ceC07b1b85359B160d22273867E9337F91007"
         })
         if(code == 200){
             setIncomeInfo(data)
@@ -139,7 +139,7 @@ export default function Service() {
                                     className="w-[30px] sm:w-[70px] mr-3 sm:mr-5"
                                     style={{height:"fit-content"}}
                                 />
-                                <span className="text-white font-bold text-lg sm:text-2xl"><span className="text-[#E1146E]">ATB实时价格:</span>0.00$</span>
+                                <span className="text-white font-bold text-lg sm:text-2xl"><span className="text-[#E1146E]">ATB实时价格:</span>{ incomeInfo?.atbPresentPrice || 0.00 }$</span>
                             </div>
                             <div className="flex justify-between mt-5 px-4 sm:px-10">
                                 <div className="flex-1 flex flex-col justify-between sm:py-8">
@@ -344,7 +344,7 @@ export default function Service() {
                 <div className="bg-[#131C20] mt-5 mb-5">
                     <div className="px-5 py-5 sm:px-10 text-base font-bold sm:text-lg flex flex-col justify-center items-center">
                         <span className="text-[#E1146D]">已领取总收益（枚）</span>
-                        <span className="mt-2 sm:mt-5">{incomeInfo?.alreadyIncomeAtb || 0}≈80USDT</span>
+                        <span className="mt-2 sm:mt-5">{incomeInfo?.alreadyIncomeAtb || 0}≈{ incomeInfo?.alreadyIncomeAtb * incomeInfo?.atbPresentPrice }USDT</span>
                     </div>
                     <div 
                         className="text-white font-bold bg-[#E1146D] h-12 sm:h-[70px] flex justify-center 
