@@ -130,6 +130,17 @@ export const getTeamInfo = (data:any) => {
     })
 }
 
+//获取直推
+export const getDirectPush = (data:any) => {
+    return fetcher({
+        method: "POST",
+        url: "api/performance_value",
+        headers: {
+            ...data
+        }
+    })
+}
+
 //获取通知
 export const getAuthNotic = (data: any) => {
     return fetcher({

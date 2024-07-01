@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
 import { useRouter } from 'next/navigation';
+import { getIncome } from '@/server/user';
 import "./page.css"
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
   const [loading, setLoding] = useState(false)
   const { data, isLoading, transfer, isSuccess, onSuccess, onError } = userContractUsdtTransition()
   const { userinfo } = useGetUserInfo()
+  const [incomeInfo,setIncomeInfo] = useState<any>({})
   const { userBalance } = useContractUserBalance()
   const [addData,setAddData] = useState({
     isShow: false,
@@ -46,6 +48,12 @@ export default function Home() {
     }
   },[isSuccess])
 
+  useEffect(()=>{
+    if(address){
+      handleGetIncomeInfo()
+    }
+  },[address])
+
   const handlePayTransition = async() => {
     if(userBalance<500){
       setSnackbarValue({ open: true, message: "余额不足",})
@@ -57,6 +65,16 @@ export default function Home() {
       args: [to, "500000000000000000000"],
     })
   }
+
+  //获取收益信息
+  const handleGetIncomeInfo = async() => {
+    let {data,code} = await getIncome({
+        address,
+    })
+    if(code == 200){
+        setIncomeInfo(data)
+    }
+}
 
   return (
     <article 
@@ -99,7 +117,7 @@ export default function Home() {
                   style={{height:"fit-content"}}
               />
               <div className="full font-bold flex flex-col justify-between py-2">
-                <div className="text-white text-lg sm:text-3xl text-right">0/10000</div>
+                <div className="text-white text-lg sm:text-3xl text-right">{incomeInfo?.mineCount || 0}/10000</div>
                 <div className="text-[#E1146E] text-lg sm:text-3xl">已出售/台</div>
               </div>
             </div>

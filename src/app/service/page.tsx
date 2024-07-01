@@ -32,8 +32,8 @@ export default function Service() {
     })
 
     const { userBalance } = useContractUserATBBalance()
-    const [addData,setAddData] = useState({ isShow: false, title: '',  status: 0, msg: '' })
-    const [snackbarValue, setSnackbarValue] = useState({ open: false, message: ""})
+    const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
+    const [ snackbarValue, setSnackbarValue ] = useState({ open: false, message: ""})
 
     useEffect(()=>{
         if(pleIssuccess){
@@ -56,6 +56,10 @@ export default function Service() {
 
     //质押
     const handlePledge = async () => {
+        if(String(incomeInfo.mineStatus) != "0"){
+            setSnackbarValue({ open: true, message: "请先购买ATR超算AI机器人",})
+            return
+        }
         if(userBalance<amount){
             setSnackbarValue({ open: true, message: "余额不足",})
             return
@@ -113,10 +117,22 @@ export default function Service() {
     //获取收益信息
     const handleGetIncomeInfo = async() => {
         let {data,code} = await getIncome({
-            address: "0x649ceC07b1b85359B160d22273867E9337F91007"
+            address,
         })
         if(code == 200){
             setIncomeInfo(data)
+        }
+    }
+
+    const filterLevel = (val:any)=>{
+        if(!val){
+            return "0T"
+        }else if(val == 1){
+            return "8T"
+        }else if(val == 2){
+            return "16T"
+        }else if(val == 3){
+            return "32T"
         }
     }
 
@@ -165,7 +181,7 @@ export default function Service() {
                                             />
                                             <span className="text-xs sm:text-xl">ATR超算机器人等级:</span>
                                         </div>
-                                        <div className="text-base font-bold sm:text-2xl">{ incomeInfo?.atb_bot_level || 0 }</div>
+                                        <div className="text-base font-bold sm:text-2xl">{ filterLevel(incomeInfo?.atb_bot_level) || 0 }</div>
                                     </div>
                                 </div>
                                 <Image

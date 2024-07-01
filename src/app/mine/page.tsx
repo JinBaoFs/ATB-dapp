@@ -3,7 +3,7 @@ import { useContractUserBalance, useGetUserInfo, userContractApprove, useContrac
 import React, { useEffect, useState } from 'react'
 import { useAccount, useBalance , useEnsAvatar,useNetwork } from 'wagmi'
 
-import { getTeamInfo } from '@/server/user';
+import { getTeamInfo, getDirectPush } from '@/server/user';
 import { useRouter, } from 'next/navigation';
 import { useTranslation } from "react-i18next"
 import ClipboardJS from 'clipboard';
@@ -31,6 +31,7 @@ export default function Mine() {
     const { address } = useAccount()
     const [ teamInfo, setTeamInfo ] = useState<any>({})
     const [ shareLink, setShareLink ] = useState<any>("")
+    const [ directData, setDirectData ] =useState<any>({})
     const params = new URLSearchParams(window.location.search)
     const paramValue = params.get('c')
 
@@ -45,6 +46,7 @@ export default function Mine() {
     useEffect(()=>{
         if(address){
             handleGetTeamInfo()
+            handleGetDirectPush()
         }
     },[address])
 
@@ -73,9 +75,14 @@ export default function Mine() {
         let { data, code } = await getTeamInfo({
             address
         })
-        if(code == 200){
-            setTeamInfo(data)
-        }
+        setTeamInfo(data)
+    }
+
+    const handleGetDirectPush = async() =>{
+        let {data,code} = await getDirectPush({
+            address,
+        })
+        setDirectData(data)
     }
 
     const filterAddr = (val:any) => {
@@ -219,6 +226,37 @@ export default function Mine() {
                                 <div className="w-[25%] flex items-center justify-center">
                                     {teamInfo?.mineNumber || 0}
                                 </div>
+                            </div>
+                            {
+                                directData?.performances?.map((item:any,idx:any)=>{
+                                    return (
+                                        <div className="flex w-full mb-2 text-xs sm:text-base">
+                                            <div className="w-[25%] flex items-center justify-center">
+                                                {filterAddr(item.address)}
+                                            </div>
+                                            <div className="w-[25%] flex items-center justify-center">
+                                                lv{item.vipLevel || 0}
+                                            </div>
+                                            <div className="w-[25%] flex items-center justify-center">
+                                                {item.sumTotalPerformance || 0}
+                                            </div>
+                                            <div className="w-[25%] flex items-center justify-center">
+                                                {item.mineNumber || 0}
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                            
+                        </div>
+                        <div className="flex py-2 sm:py-5 justify-between">
+                            <div className="flex w-[45%] bg-[#1C282F] p-2 sm:p-4 text-xs sm:text-base justify-between">
+                                <span>大区业绩:</span>
+                                <span>{directData?.maxPerformanceValue || 0.00}</span>
+                            </div>
+                            <div className="flex w-[45%] bg-[#1C282F] p-2 sm:p-4 text-xs sm:text-base justify-between">
+                                <span>小区业绩:</span>
+                                <span>{directData?.minPerformanceValue || 0.00}</span>
                             </div>
                         </div>
                     </div>
