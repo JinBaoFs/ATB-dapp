@@ -105,7 +105,7 @@ export default function Mine() {
                             <div className="flex flex-col py-2"> 
                                 <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的上级</div>
                                 <div className="w-full">
-                                    <div className="bg-[#1C282F] text-xs sm:text-lg w-[100%] sm:w-[80%] p-3 sm:p-3">{teamInfo?.inviter}</div>
+                                    <div className="bg-[#1C282F] text-xs sm:text-lg w-[100%] sm:w-[80%] p-3 sm:p-3">{teamInfo?.inviter || "暂无上级"}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col py-2"> 
@@ -149,13 +149,21 @@ export default function Mine() {
                             <div className="flex justify-between w-full mb-8">
                                 <div className="flex justify-center items-center" style={{width: "50%"}}>
                                     <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
-                                        <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>
+                                        {
+                                            !teamInfo?.vipLevel ?
+                                            <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>:
+                                            <div className="bg-[#000] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>
+                                        }
                                     </div>
                                     <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">未达成</span>
                                 </div>
                                 <div className="flex justify-center items-center" style={{width: "50%"}}>
                                     <div className="bg-[#000] p-2 sm:p-3" style={{borderRadius: "10px"}}>
-                                        <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%",background: "#000"}}></div>
+                                        {
+                                            teamInfo?.vipLevel ?
+                                            <div className="bg-[#00FF30] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>:
+                                            <div className="bg-[#000] w-3 h-3 sm:w-6 sm:h-6" style={{borderRadius: "50%"}}></div>
+                                        }
                                     </div>
                                     <span className="text-white text-xs sm:text-lg font-bold ml-2 sm:ml-5">达成</span>
                                 </div>

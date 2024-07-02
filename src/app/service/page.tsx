@@ -13,7 +13,7 @@ import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import { useBalance, useContractWrite, useAccount } from "wagmi"
 import { parseEther } from 'viem'
 import { atbConfig, withdarwConfig } from "@/lib/contract"
-import { useContractUserATBBalance } from "@/hooks/usdt"
+import { useContractUserATBBalance,useContractPollUSDT,useContractPollATB } from "@/hooks/usdt"
 import { getSignData,getIncome } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
 
@@ -32,8 +32,11 @@ export default function Service() {
     })
 
     const { userBalance } = useContractUserATBBalance()
+    const poolUSDTData = useContractPollUSDT()
+    const poolATBData = useContractPollATB()
     const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
     const [ snackbarValue, setSnackbarValue ] = useState({ open: false, message: ""})
+    
 
     useEffect(()=>{
         if(pleIssuccess){
@@ -73,6 +76,14 @@ export default function Service() {
 
     //领取USDT
     const handleReceiveUSDT = async() => {
+        if(!incomeInfo.pensionableUsdt){
+            setSnackbarValue({ open: true, message: "当前无可用领取奖励",})
+            return
+        }
+        if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData)){
+            setSnackbarValue({ open: true, message: "领取失败"})
+            return
+        }
         if(!address) return
         let { data, code } = await getSignData({
             address: address,
@@ -94,6 +105,14 @@ export default function Service() {
 
     //领取ATB
     const handleReceiveATB = async() => {
+        if(!incomeInfo.pensionableAtb){
+            setSnackbarValue({ open: true, message: "当前无可用领取奖励",})
+            return
+        }
+        if(Number(incomeInfo.pensionableAtb) > Number(poolATBData.userBalance)){
+            setSnackbarValue({ open: true, message: "领取失败"})
+            return
+        }
         if(!address) return
         let { data, code } = await getSignData({
             address: address,
@@ -111,7 +130,6 @@ export default function Service() {
                 args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
             })
         }
-        
     }
     
     //获取收益信息

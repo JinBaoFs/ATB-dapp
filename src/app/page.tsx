@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
 import { useRouter } from 'next/navigation';
-import { getIncome } from '@/server/user';
+import { getIncome, getTeamInfo } from '@/server/user';
 import "./page.css"
 
 export default function Home() {
@@ -28,7 +28,8 @@ export default function Home() {
   const [loading, setLoding] = useState(false)
   const { data, isLoading, transfer, isSuccess, onSuccess, onError } = userContractUsdtTransition()
   const { userinfo } = useGetUserInfo()
-  const [incomeInfo,setIncomeInfo] = useState<any>({})
+  const [ incomeInfo, setIncomeInfo ] = useState<any>({})
+  const [ teamInfo, setTeamInfo ] = useState<any>({})
   const { userBalance } = useContractUserBalance()
   const [addData,setAddData] = useState({
     isShow: false,
@@ -51,10 +52,16 @@ export default function Home() {
   useEffect(()=>{
     if(address){
       handleGetIncomeInfo()
+      handleGetTeamInfo()
     }
   },[address])
 
   const handlePayTransition = async() => {
+    if(!teamInfo.inviter){
+      setSnackbarValue({ open: true, message: "请通过邀请链接访问",})
+      return
+    }
+
     if(userBalance<500){
       setSnackbarValue({ open: true, message: "余额不足",})
       return
@@ -74,7 +81,13 @@ export default function Home() {
     if(code == 200){
         setIncomeInfo(data)
     }
-}
+  }
+  const handleGetTeamInfo = async() => {
+    let { data, code } = await getTeamInfo({
+        address
+    })
+    setTeamInfo(data)
+  }
 
   return (
     <article 

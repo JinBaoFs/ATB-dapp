@@ -5,7 +5,7 @@ import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
 import { getIncome, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
-import { atbConfig,usdtConfig } from "@/lib/contract"
+import { atbConfig,usdtConfig,withdarwConfig } from "@/lib/contract"
 
 
 const useContractConfig = () => {
@@ -155,6 +155,63 @@ export const useContractUserATBBalance = () => {
     }, [balance, address])
     return { userBalance, balanceLoading }
 }
+
+//获取池子USDT
+export const useContractPollUSDT = () => {
+    const { address } = useAccount()
+    const [ userBalance, setUserBalance ] = useState(0)
+    const [ balanceLoading, setBalanceLoading ] = useState(true)
+    const { data: balance, isLoading: loading, isError: error } = useContractRead({
+        ...usdtConfig,
+        functionName: "balanceOf",
+        args: [withdarwConfig.address],
+        watch: true,
+    })
+    console.log(balance,"池子金额===")
+    useEffect(() => {
+        setBalanceLoading(true)
+        if (!address) {
+            setUserBalance(0)
+        } else {
+            // 将balance减小十的18次方
+            let divisor
+            divisor = Math.pow(10, 18);
+            const adjustedBalance = Number(balance) / divisor;
+            setUserBalance(adjustedBalance || 0)
+        }
+        setBalanceLoading(false)
+    }, [balance, address])
+    return { userBalance, balanceLoading }
+}
+
+//获取池子USDT
+export const useContractPollATB = () => {
+    const { address } = useAccount()
+    const [ userBalance, setUserBalance ] = useState(0)
+    const [ balanceLoading, setBalanceLoading ] = useState(true)
+    const { data: balance, isLoading: loading, isError: error } = useContractRead({
+        ...atbConfig,
+        functionName: "balanceOf",
+        args: [withdarwConfig.address],
+        watch: true,
+    })
+    console.log(balance,"池子ATB金额===")
+    useEffect(() => {
+        setBalanceLoading(true)
+        if (!address) {
+            setUserBalance(0)
+        } else {
+            // 将balance减小十的18次方
+            let divisor
+            divisor = Math.pow(10, 18);
+            const adjustedBalance = Number(balance) / divisor;
+            setUserBalance(adjustedBalance || 0)
+        }
+        setBalanceLoading(false)
+    }, [balance, address])
+    return { userBalance, balanceLoading }
+}
+
 export const useGetUserInfo = () => {
 
     const { address } = useAccount()
