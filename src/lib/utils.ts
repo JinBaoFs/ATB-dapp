@@ -1,4 +1,5 @@
 import { match } from "assert";
+import axios from 'axios'
 
 export function shortenString(str:string, frontLen = 4, endLen = 4, ellipsis = '...') {
     if (str.length <= frontLen + endLen) {
@@ -19,4 +20,3 @@ function getRandomInt(min:number, max:number) {
 }
 
 export const NEXT_PUBLIC_USDT_VALUE = getRandomInt(2000,4000)
-

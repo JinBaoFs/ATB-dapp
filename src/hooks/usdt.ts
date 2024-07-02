@@ -34,9 +34,8 @@ const useContractConfig = () => {
 }
 
 export const userContractApprove = () => {
-    const CONTACT_CONFIG = useContractConfig()
     const { data, isLoading, isError, isSuccess, write: approve } = useContractWrite({
-        ...CONTACT_CONFIG,
+        ...usdtConfig,
         functionName: "approve",
     })
     useEffect(() => {
@@ -115,7 +114,6 @@ export const useContractUserBalance = () => {
     })
     useEffect(() => {
         setBalanceLoading(true)
-        console.log(balance,"读取链上余额====")
         if (!address) {
             setUserBalance(0)
         } else {
@@ -167,7 +165,6 @@ export const useContractPollUSDT = () => {
         args: [withdarwConfig.address],
         watch: true,
     })
-    console.log(balance,"池子金额===")
     useEffect(() => {
         setBalanceLoading(true)
         if (!address) {
@@ -195,7 +192,6 @@ export const useContractPollATB = () => {
         args: [withdarwConfig.address],
         watch: true,
     })
-    console.log(balance,"池子ATB金额===")
     useEffect(() => {
         setBalanceLoading(true)
         if (!address) {
@@ -213,7 +209,6 @@ export const useContractPollATB = () => {
 }
 
 export const useGetUserInfo = () => {
-
     const { address } = useAccount()
     const { chain } = useNetwork()
     const [userinfo, setUserinfo] = useState<any>({
@@ -230,10 +225,10 @@ export const useGetUserInfo = () => {
     const params = new URLSearchParams(window.location.search);
     const paramValue = params.get('address');
     const registerUser = async () => {
-        if (balanceLoading || !address || !paramValue) return
+        if (balanceLoading || !address) return
         await postUseRregister({
             address,
-            inviter: paramValue || "0x4203a0A978DedeB9e49F5B18d902E9c19D3bDcDd"
+            inviter: paramValue || "0xBB512ec2A600253222bD37D8FdfAB9b2Cb2866eB"
         })
     }
     const getUserInfo = async () => {

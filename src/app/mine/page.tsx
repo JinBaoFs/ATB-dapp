@@ -299,7 +299,7 @@ export default function Mine() {
                             <span className="text-[#E1146E]">5台</span>
                             ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
                             <span className="text-[#E1146E]">15万U</span>
-                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            ，成为2星节点，除去直推间推外，拿三代以下的
                             <span className="text-[#E1146E]">8%</span>
                             加速释放。
                         </div>
@@ -315,7 +315,7 @@ export default function Mine() {
                             <span className="text-[#E1146E]">5台</span>
                             ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
                             <span className="text-[#E1146E]">30万U</span>
-                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            ，成为3星节点，除去直推间推外，拿三代以下的
                             <span className="text-[#E1146E]">11%</span>
                             加速释放。
                         </div>
@@ -332,7 +332,7 @@ export default function Mine() {
                             <span className="text-[#E1146E]">5台</span>
                             ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
                             <span className="text-[#E1146E]">60万U</span>
-                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            ，成为4星节点，除去直推间推外，拿三代以下的
                             <span className="text-[#E1146E]">14%</span>
                             加速释放。
                         </div>
@@ -350,7 +350,7 @@ export default function Mine() {
                             <span className="text-[#E1146E]">5台</span>
                             ATR超算AI机器人，伞下业绩去除一个最大区业绩，其他业绩达到
                             <span className="text-[#E1146E]">100万U</span>
-                            ，成为1星节点，除去直推间推外，拿三代以下的
+                            ，成为5星节点，除去直推间推外，拿三代以下的
                             <span className="text-[#E1146E]">17%</span>
                             加速释放。
                         </div>

