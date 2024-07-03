@@ -33,7 +33,7 @@ export default function MsgSuccess({isShow,title,status,msg,reset}:any){
                     />
                     <div className="text-center mb-2 sm:mb-5">{ msg }</div>
                 </div>
-                <div className="bg-[#017EFF] font-bold text-center py-3 sm:py-5 text-base sm:text-lg cursor-pointer" style={{userSelect: "none"}}>确定</div>
+                <div className="bg-[#017EFF] font-bold text-center py-3 sm:py-5 text-base sm:text-lg cursor-pointer" style={{userSelect: "none"}}>{t("index.h_21")}</div>
             </div>
         </div>
     )

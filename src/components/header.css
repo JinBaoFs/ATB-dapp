@@ -23,8 +23,6 @@
 }
 
 .select-lang{
-    background: linear-gradient( 180deg, #2D5751 0%, #2F4D32 100%);
-    border: 1px solid rgba(34, 255, 224, 1);
     border-radius: 10px;
 }
 
@@ -36,13 +34,13 @@
     display: flex;
     color: #fff;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 80px;
+    width: 100px;
     height: 80px;
     line-height: 80px;
 }
 
 .nav-list .nav-item img{
     height: fit-content;
+    margin-right: 20px;
 }

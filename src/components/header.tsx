@@ -15,7 +15,6 @@ import SPImg from "@images/locale/sp.png"
 import POImg from "@images/locale/po.png"
 import LAImg from "@images/locale/la.png"
 import SELECTImg from "@images/select.png"
-import CLOSEImg from "@images/close.png"
 import LOGOIMG from "@images/logo.png"
 import MENUIMG from "@images/menu.png"
 import HOMEIMG from "@images/home.png"
@@ -38,7 +37,7 @@ interface IHeaderProps extends HTMLAttributes<HTMLDivElement> {
 export default function Header({ }: IHeaderProps) {
     const pathname = usePathname()
     const { address } = useAccount()
-    const { i18n } = useTranslation()
+    const { i18n,t } = useTranslation()
     const [ menuShow,setMenuShow ] = useState(false)
     const [ imgIndex, setImgIndex ] = useState(0)
     const [ open, setOpen ] = React.useState(false);
@@ -70,48 +69,11 @@ export default function Header({ }: IHeaderProps) {
             img: CNImg,
             text: "中文"
         },
-        {
-            path: "ja",
-            img: JPImg,
-            text: "日本語"
-        },
-        {
-            path: "fa",
-            img: FAImg,
-            text: "Français"
-        },
-        {
-            path: "de",
-            img: DEImg,
-            text: "Deutsch"
-        },
-        {
-             path: "kr",
-             img: KRImg,
-             text: "한국인"
-        },
-        {
-            path: "sp",
-            img: SPImg,
-            text: "Español"
-       },
-       {
-            path: "po",
-            img: POImg,
-            text: "Português"
-        },
-        {
-            path: "la",
-            img: LAImg,
-            text: "عربي"
-        },
     ]
 
     useEffect(()=>{
         if (typeof localStorage !== 'undefined') {
-            let lang = localStorage.getItem("lang") || 'en'
-            // let menuIndex = localStorage.getItem("menuTabIndex") || '0'
-            // setValue(Number(menuIndex))
+            let lang = localStorage.getItem("lang") || 'cn'
             i18n.changeLanguage(lang)
         }
     },[])
@@ -218,16 +180,16 @@ export default function Header({ }: IHeaderProps) {
                             onChange={handleChange}
                             aria-label="styled tabs example"
                         >
-                            <StyledTab label="首页" />
-                            <StyledTab label="收益" />
-                            <StyledTab label="我的团队" />
+                            <StyledTab label={t("index.home")} />
+                            <StyledTab label={t("index.income")} />
+                            <StyledTab label={t("index.mine")} />
                         </StyledTabs>
                     </div>
                 </div>
                 <div className='navbar-end flex justify-end gap-3'>
                 <div className="dropdown dropdown-end flex justify-end">
                         <div tabIndex={0} className="rounded-[6px] flex p-[10px] justify-center text-right bg-[#E1146E]" style={{width: "40px",height: "40px"}} 
-                        // onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }
+                        onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }
                         >
                             <Image
                                 src={LOCALEImg}
@@ -240,27 +202,26 @@ export default function Header({ }: IHeaderProps) {
                         {
                             menuShow &&
                             <div style={{background:"rgba(0,0,0,0.5)",width: "100vw",height: "100vh",position: "fixed",top: "0",left: "0",display:"flex",flexDirection: "column",justifyContent:"center",alignItems: "center"}} onClick={ (event)=>{ event.stopPropagation();setMenuShow(!menuShow) } }>
-                                <div className="select-lang flex-col w-[20rem]" onClick={(event)=>{ event.stopPropagation() }}>
-                                    <div className="text-[#22FFE0] p-2 px-3 flex" style={{justifyContent:"space-between"}}>
-                                        <span>Select Language</span>
-                                        <span className="text-white" style={{fontSize: "20px"}} onClick={()=>{ setMenuShow(false) }}>×</span>
+                                <div className="select-lang flex-col w-[80%] sm:w-[50%] bg-[#131C20]" onClick={(event)=>{ event.stopPropagation() }}>
+                                    <div className="text-[#fff] p-3 sm:p-5 flex" style={{justifyContent:"space-between"}}>
+                                        <span>切换语言</span>
+                                        <span className="text-white cursor-pointer" style={{fontSize: "20px"}} onClick={()=>{ setMenuShow(false) }}>×</span>
                                     </div>
-                                    <div className="line"></div>
-                                    <div className="menu-list px-3 py-5 menu rounded shadow-lg shadow-black sm:w-auto" style={{display: "flex",flexWrap: "wrap",justifyContent: "space-between",flexDirection: "row",}}> 
+                                    <div className="menu-list px-3 py-5 menu rounded shadow-lg shadow-black sm:w-auto flex flex-col"> 
                                         {
                                             localList.map((locale,index)=>{
                                                 return (
-                                                    <div key={locale.path} style={{background:imgIndex == index ? "#1D3D30" : "#1D3D30",border: "1px solid rgba(34,255,224,0.2)"}} className='p-2 py-3 my-2 rounded-[10px] cursor-pointer flex justify-start w-[130px]' onClick={()=>{ changeLanguage(locale) }}>
-                                                        <Image
-                                                            src={locale.img}
-                                                            width={20}
-                                                            height={20}
-                                                            alt=''
-                                                            className='mr-2 my-auto'
-                                                        />
-                                                        <p className='w-24'>
-                                                            {locale.text}
-                                                        </p>
+                                                    <div key={locale.path} style={{background:imgIndex == index ? "#1D3D30" : "#1D3D30",border: "1px solid rgba(34,255,224,0.2)"}} className='p-2 py-3 my-2 rounded-[10px] cursor-pointer flex justify-between' onClick={()=>{ changeLanguage(locale) }}>
+                                                        <div className="flex items-center">
+                                                            <Image
+                                                                src={locale.img}
+                                                                width={20}
+                                                                height={20}
+                                                                alt=''
+                                                                className='mr-2 my-auto'
+                                                            />
+                                                            <p className='w-24'>{locale.text}</p>
+                                                        </div>
                                                         {
                                                             imgIndex == index && 
                                                             <Image
@@ -299,7 +260,7 @@ export default function Header({ }: IHeaderProps) {
                                 width={20}
                                 alt=''
                             />
-                            <span className="text-xm">首页</span>
+                            <span className="text-xm">{t("index.home")}</span>
                         </div>
                         <div className="nav-item" onClick={()=>{toPage(1)}}>
                             <Image
@@ -307,7 +268,7 @@ export default function Header({ }: IHeaderProps) {
                                 width={20}
                                 alt=''
                             />
-                            <span className="text-xm">收益</span>
+                            <span className="text-xm">{t("index.income")}</span>
                         </div>
                         <div className="nav-item" onClick={()=>{toPage(2)}}>
                             <Image
@@ -315,7 +276,7 @@ export default function Header({ }: IHeaderProps) {
                                 width={20}
                                 alt=''
                             />
-                            <span className="text-xm">团队</span>
+                            <span className="text-xm">{t("index.mine_02")}</span>
                         </div>
                     </div>
                 </div>

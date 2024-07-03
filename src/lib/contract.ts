@@ -16,7 +16,7 @@ export const atbConfig = {
 }
 
 export const withdarwConfig = {
-    address: "0x604E66246d85B074deb296E1984689526A69C2C6" as `0x${string}`,
+    address: "0xFd297994631b2A15c602696bD127b92AA871453D" as `0x${string}`,
     abi: ATBWithdraw as any,
     chainId: chainId,
 }

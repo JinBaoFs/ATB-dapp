@@ -10,9 +10,9 @@ export function fetcher(options:any) {
     // 测试
     // baseURL: options?.baseURL || "https://solanasup.top/",
     // baseURL: options?.baseURL || "http://103.143.231.82:8080",
-    baseURL: options?.baseURL || "http://18.143.16.138:8080",
+    // baseURL: options?.baseURL || "http://18.143.16.138:8080",
     // baseURL: options?.baseURL || "http://192.168.1.179:8080",
-    // baseURL: options?.baseURL || "/api",
+    baseURL: options?.baseURL || "/atbapi",
     method: options.method || 'post',
     url: options.url,
     data: options.data,
