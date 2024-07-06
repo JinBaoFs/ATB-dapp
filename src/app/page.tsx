@@ -57,6 +57,10 @@ export default function Home() {
   },[address])
 
   const handlePayTransition = async() => {
+    if(String(incomeInfo.mineStatus) == "0"){
+        setSnackbarValue({ open: true, message: t("index.h_22"),})
+        return
+    }
     if(!teamInfo.inviter){
       setSnackbarValue({ open: true, message: t("index.h_17"),})
       return

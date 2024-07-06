@@ -40,6 +40,8 @@ export default function Service() {
     const poolATBData = useContractPollATB()
     const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
     const [ snackbarValue, setSnackbarValue ] = useState({ open: false, message: ""})
+    const [ atbLoading,setAtbLoading ] = useState(false)
+    const [ uLoading,setUloading ] = useState(false)
     
 
     useEffect(()=>{
@@ -51,6 +53,21 @@ export default function Service() {
         if(usdtIssuccess){
             setAddData({ title: "", isShow: true, status: 0, msg: t("service.s_23")})
             handleGetIncomeInfo()
+
+            if(atbLoading){
+                if (typeof localStorage !== 'undefined') {
+                    let nowDate = new Date()
+                    let str = nowDate.getDate()
+                    localStorage.setItem("atb_time", String(str))
+                }
+            }
+            if(uLoading){
+                if (typeof localStorage !== 'undefined') {
+                    let nowDate = new Date()
+                    let str = nowDate.getDate()
+                    localStorage.setItem("usdt_time", String(str))
+                }
+            }
         }
     },[pleIssuccess,usdtIssuccess])
 
@@ -90,6 +107,14 @@ export default function Service() {
 
     //领取USDT
     const handleReceiveUSDT = async() => {
+        let nowDate = new Date()
+        let str = String(nowDate.getDate())
+        let usdt_time = localStorage.getItem("usdt_time")
+
+        if(str == usdt_time){
+            setSnackbarValue({ open: true, message: t("service.s_26"),})
+            return
+        }
         if(!incomeInfo.pensionableUsdt){
             setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
@@ -128,6 +153,14 @@ export default function Service() {
 
     //领取ATB
     const handleReceiveATB = async() => {
+        let nowDate = new Date()
+        let str = String(nowDate.getDate())
+        let atb_time = localStorage.getItem("atb_time")
+
+        if(str == atb_time){
+            setSnackbarValue({ open: true, message: t("service.s_26"),})
+            return
+        }
         if(!incomeInfo.pensionableAtb){
             setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
@@ -153,6 +186,7 @@ export default function Service() {
                 args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
             })
         }
+        setAtbLoading(true)
     }
     
     //获取收益信息
