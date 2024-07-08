@@ -112,7 +112,7 @@ export default function Service() {
         let usdt_time = localStorage.getItem("usdt_time")
 
         if(str == usdt_time){
-            setSnackbarValue({ open: true, message: t("service.s_26"),})
+            setSnackbarValue({ open: true, message: t("service.s_28"),})
             return
         }
         if(!incomeInfo.pensionableUsdt){
@@ -156,9 +156,8 @@ export default function Service() {
         let nowDate = new Date()
         let str = String(nowDate.getDate())
         let atb_time = localStorage.getItem("atb_time")
-
         if(str == atb_time){
-            setSnackbarValue({ open: true, message: t("service.s_26"),})
+            setSnackbarValue({ open: true, message: t("service.s_28"),})
             return
         }
         if(!incomeInfo.pensionableAtb){
