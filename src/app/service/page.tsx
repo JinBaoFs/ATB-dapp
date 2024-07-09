@@ -286,46 +286,60 @@ export default function Service() {
                     <div className="px-5 py-5 sm:px-10">
                         <div className="text-[#E1146E] mb-2 sm:mb-5 text-base sm:text-xl font-bold">{t("service.s_05")}</div>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
+                            <Grid item xs={12} lg={3} className="flex justify-center">
                                 <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
                                     <div className="flex items-center">
                                         <Image
                                             src={TIMG01}
                                             alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-4"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_06")}：</span>
+                                        <span className="text-xs sm:text-lg font-bold">{t("service.s_06")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{ incomeInfo?.rewardAmountUsdt || 0.00 }</div>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
+                            <Grid item xs={12} lg={3} className="flex justify-center">
                                 <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
                                     <div className="flex items-center">
                                         <Image
                                             src={TIMG02}
                                             alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-4"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_07")}：</span>
+                                        <span className="text-xs sm:text-lg font-bold">{t("service.s_07")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{incomeInfo?.grossStaticUsdt || 0.00}</div>
                                 </div>
                             </Grid>
-                            <Grid item xs={12} lg={4} className="flex justify-center">
+                            <Grid item xs={12} lg={3} className="flex justify-center">
                                 <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
                                     <div className="flex items-center">
                                         <Image
                                             src={TIMG03}
                                             alt=''
-                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-6"
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-4"
                                             style={{height:"fit-content"}}
                                         />
-                                        <span className="text-xs sm:text-xl font-bold">{t("service.s_08")}：</span>
+                                        <span className="text-xs sm:text-lg font-bold">{t("service.s_08")}：</span>
                                     </div>
                                     <div className="text-base font-bold sm:text-2xl">{incomeInfo?.alreadyIncomeUsdt || 0.00}</div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12} lg={3} className="flex justify-center">
+                                <div className="flex justify-between bg-[#1C282F] p-2 sm:p-5 w-full">
+                                    <div className="flex items-center">
+                                        <Image
+                                            src={TIMG03}
+                                            alt=''
+                                            className="w-[20px] sm:w-[25px] mr-2 sm:mr-4"
+                                            style={{height:"fit-content"}}
+                                        />
+                                        <span className="text-xs sm:text-lg font-bold">{t("service.s_30")}：</span>
+                                    </div>
+                                    <div className="text-base font-bold sm:text-2xl">{incomeInfo?.pensionableUsdt || 0.00}</div>
                                 </div>
                             </Grid>
                         </Grid>
@@ -365,6 +379,18 @@ export default function Service() {
                                     <span className="text-xs sm:text-lg">{t("service.s_14")}：</span>
                                 </div>
                                 <div className="text-base sm:text-xl">{incomeInfo?.alreadyIncomeAtb || 0.00}</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">{t("service.s_28")}:</span>
+                                </div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.grossDynamicATB || 0.00}</div>
+                            </div>
+                            <div className="flex justify-between bg-[#1C282F] p-2 sm:p-3 w-full mt-2">
+                                <div className="flex items-center">
+                                    <span className="text-xs sm:text-lg">{t("service.s_29")}:</span>
+                                </div>
+                                <div className="text-base sm:text-xl">{incomeInfo?.pensionableAtb || 0.00}</div>
                             </div>
                         </div>            
                     </Grid>

@@ -54,7 +54,10 @@
             "s_24": "Please purchase ATR supercomputing AI robots first",
             "s_25": "Sorry, your credit is running low",
             "s_26": "Currently, there are no available rewards to claim",
-            "s_27": "Claim failed"
+            "s_27": "Claim failed",
+            "s_28": "Dynamic output ATB",
+            "s_29": "ATB can be claimed",
+            "s_30": "To be claimed (USDT)"
         },
         "mine": {
             "m_01": "My superior",
