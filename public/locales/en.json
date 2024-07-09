@@ -25,7 +25,8 @@
             "h_18": "Sorry, your credit is running low",
             "h_19": "Tips",
             "h_20": "Purchase successful",
-            "h_21": "Confirm"
+            "h_21": "Confirm",
+            "h_22": "You have already purchased a mining machine"
         },
         "service": {
             "s_01": "ATB real-time pricing",
@@ -55,9 +56,10 @@
             "s_25": "Sorry, your credit is running low",
             "s_26": "Currently, there are no available rewards to claim",
             "s_27": "Claim failed",
-            "s_28": "Dynamic output ATB",
-            "s_29": "ATB can be claimed",
-            "s_30": "To be claimed (USDT)"
+            "s_28": "You have already claimed it",
+            "s_29": "Dynamic output ATB",
+            "s_30": "ATB can be claimed",
+            "s_31": "To be claimed (USDT)"
         },
         "mine": {
             "m_01": "My superior",
