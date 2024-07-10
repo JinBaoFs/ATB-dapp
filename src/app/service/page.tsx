@@ -141,18 +141,18 @@ export default function Service() {
         let str = String(nowDate.getDate())
         let usdt_time = localStorage.getItem("usdt_time")
 
-        // if(str == usdt_time){
-        //     setSnackbarValue({ open: true, message: t("service.s_28"),})
-        //     return
-        // }
-        // if(!incomeInfo.pensionableUsdt){
-        //     setSnackbarValue({ open: true, message: t("service.s_26"),})
-        //     return
-        // }
-        // if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
-        //     setSnackbarValue({ open: true, message: t("service.s_27")})
-        //     return
-        // }
+        if(str == usdt_time){
+            setSnackbarValue({ open: true, message: t("service.s_28"),})
+            return
+        }
+        if(!incomeInfo.pensionableUsdt){
+            setSnackbarValue({ open: true, message: t("service.s_26"),})
+            return
+        }
+        if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
+            setSnackbarValue({ open: true, message: t("service.s_27")})
+            return
+        }
         if(!address) return
 
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
