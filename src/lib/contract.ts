@@ -1,6 +1,7 @@
 import USDTTokenAbi from "../contract/USDTToken.json"
 import ATBWithdraw from "../contract/ATBWithdraw.json"
 import ATBTokenAbi from "../contract/ATBToken.json"
+import LPTokenAbi from "../contract/LPToken.json"
 const chainId = 56
 
 export const usdtConfig = {
@@ -18,5 +19,11 @@ export const atbConfig = {
 export const withdarwConfig = {
     address: "0xFd297994631b2A15c602696bD127b92AA871453D" as `0x${string}`,
     abi: ATBWithdraw as any,
+    chainId: chainId,
+}
+
+export const LPConfig = {
+    address: "0x59c16dc9aeb12d89459979529722b63b88c6cb3c" as `0x${string}`,
+    abi: LPTokenAbi as any,
     chainId: chainId,
 }

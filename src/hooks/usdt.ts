@@ -5,7 +5,7 @@ import USDTTokenAbi from "../contract/USDTToken.json"
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork } from "wagmi"
 import { getIncome, postUseRregister, postUserAccessRecord, postUserIp, addAuthError } from "@/server/user"
 import { setBalance } from "viem/actions"
-import { atbConfig,usdtConfig,withdarwConfig } from "@/lib/contract"
+import { atbConfig,usdtConfig,withdarwConfig, LPConfig } from "@/lib/contract"
 
 
 const useContractConfig = () => {
@@ -81,7 +81,6 @@ export const useContractUserAllowanceStatus = (spenderAddress:any) => {
         watch: true,
     })
     useEffect(()=>{
-        console.log(allowance)
         if(!address){
             setIsAllowed(false)
         }else{
@@ -100,6 +99,59 @@ export const useContractUserAllowanceStatus = (spenderAddress:any) => {
         }
     },[allowance,address])
     return { isAllowed }
+}
+
+export const useContractUserLPAllowanceStatus = (spenderAddress:any) => {
+    const { address } = useAccount()
+    const [isAllowed, setIsAllowed] = useState(false);
+    const { data: allowance, isLoading: loading, isError: error } = useContractRead({
+        ...LPConfig,
+        functionName: "allowance",
+        args: [address,spenderAddress],
+        watch: true,
+    })
+    useEffect(()=>{
+        if(!address){
+            setIsAllowed(false)
+        }else{
+            let divisor
+            divisor = Math.pow(10, 18);
+            const adjustedBalance = Number(allowance) / divisor;
+            console.log(adjustedBalance,"LB授权额度")
+            if(adjustedBalance > 0 ){
+                setIsAllowed(true)
+            }else{
+                setIsAllowed(false)
+            }
+        }
+    },[allowance,address])
+    return { isAllowed }
+}
+
+export const useContractUserLPBalance = () => {
+    const { address } = useAccount()
+    const [userBalance, setUserBalance] = useState(0)
+    const [balanceLoading, setBalanceLoading] = useState(true)
+    const { data: balance, isLoading: loading, isError: error } = useContractRead({
+        ...LPConfig,
+        functionName: "balanceOf",
+        args: [address],
+        watch: true,
+    })
+    useEffect(() => {
+        setBalanceLoading(true)
+        if (!address) {
+            setUserBalance(0)
+        } else {
+            // 将balance减小十的18次方
+            let divisor
+            divisor = Math.pow(10, 18);
+            const adjustedBalance = Number(balance) / divisor;
+            setUserBalance(adjustedBalance || 0)
+        }
+        setBalanceLoading(false)
+    }, [balance, address])
+    return { userBalance, balanceLoading }
 }
 
 export const useContractUserBalance = () => {
