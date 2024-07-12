@@ -93,6 +93,31 @@ export default function Mine() {
             return _str
         }
     }
+
+    const filterUsdt = (val:any) => {
+        let num = 1000
+        switch(String(val)){
+            case "1":
+                num = 1000
+                break
+            case "2":
+                num = 3000
+                break
+            case "3":
+                num = 10000
+                break
+            case "4":
+                num = 15000
+                break
+            case "5":
+                num = 20000
+                break
+            default:
+                num = 1000
+                break
+        }
+        return num
+    }
     return (
         <article 
             className="h-full"
@@ -144,7 +169,7 @@ export default function Mine() {
                             </div>
                             <div className="#283C43 flex justify-between items-center py-8 sm:py-12 px-5 sm:px-8 text-white text-xs sm:text-lg font-bold">
                                 <div>{t("mine.m_05")}:</div>
-                                <div>1000</div>
+                                <div>{ filterUsdt(teamInfo?.vipLevel) }</div>
                             </div>
                             <div className="flex justify-between w-full mb-8">
                                 <div className="flex justify-center items-center" style={{width: "50%"}}>

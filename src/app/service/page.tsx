@@ -40,6 +40,10 @@ export default function Service() {
         ...withdarwConfig,
         functionName: "withdrawPermit",
     })
+    const { data:ATBData, isLoading: ATBLoading, isSuccess: ATBIssuccess, write: ATBWithdrawPermit, } = useContractWrite({
+        ...withdarwConfig,
+        functionName: "withdrawPermit",
+    })
     const { data:tokenData, isLoading:tokenLoading, approve, isSuccess:tokenIsSuccess } = userContractApprove()
 
     const { data:LPData, isLoading: LPLoading, isSuccess: LPIssuccess, write: LPapprove, } = useContractWrite({
@@ -70,23 +74,22 @@ export default function Service() {
         if(usdtIssuccess){
             setAddData({ title: "", isShow: true, status: 0, msg: t("service.s_23")})
             handleGetIncomeInfo()
-
-            if(atbLoading){
-                if (typeof localStorage !== 'undefined') {
-                    let nowDate = new Date()
-                    let str = nowDate.getDate()
-                    localStorage.setItem("atb_time", String(str))
-                }
-            }
-            if(uLoading){
-                if (typeof localStorage !== 'undefined') {
-                    let nowDate = new Date()
-                    let str = nowDate.getDate()
-                    localStorage.setItem("usdt_time", String(str))
-                }
+            if (typeof localStorage !== 'undefined') {
+                let nowDate = new Date()
+                let str = nowDate.getDate()
+                localStorage.setItem("usdt_time", String(str))
             }
         }
-    },[pleIssuccess,usdtIssuccess])
+        if(ATBIssuccess){
+            setAddData({ title: "", isShow: true, status: 0, msg: t("service.s_23")})
+            handleGetIncomeInfo()
+            if (typeof localStorage !== 'undefined') {
+                let nowDate = new Date()
+                let str = `${nowDate.getMonth()}${nowDate.getDate()}`
+                localStorage.setItem("atb_time", String(str))
+            }
+        }
+    },[pleIssuccess,usdtIssuccess,ATBIssuccess])
 
     useEffect(()=>{
         if(tokenIsSuccess){
@@ -196,13 +199,13 @@ export default function Service() {
         setTimeout(()=>{ setBtnLoading(false) },5000)
 
         let nowDate = new Date()
-        let str = String(nowDate.getDate())
+        let str = String(`${nowDate.getMonth()}${nowDate.getDate()}`)
         let atb_time = localStorage.getItem("atb_time")
         if(str == atb_time){
             setSnackbarValue({ open: true, message: t("service.s_28"),})
             return
         }
-        if(!incomeInfo.pensionableAtb){
+        if(!Number(incomeInfo.pensionableAtb)){
             setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
         }
@@ -223,7 +226,7 @@ export default function Service() {
             let r = data.sig.r
             let s = data.sig.s
             let v = data.sig.v
-            withdrawPermit({
+            ATBWithdrawPermit({
                 args:[_wid,_wAmt,_tokenAddr,_deadline,r,s,v]
             })
         }
