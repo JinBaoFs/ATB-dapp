@@ -148,7 +148,7 @@ export default function Service() {
             setSnackbarValue({ open: true, message: t("service.s_28"),})
             return
         }
-        if(!incomeInfo.pensionableUsdt){
+        if(!Number(incomeInfo.pensionableUsdt)){
             setSnackbarValue({ open: true, message: t("service.s_26"),})
             return
         }
