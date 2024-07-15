@@ -116,7 +116,7 @@ export default function Service() {
                 receiveUSDTConfirm()
             }else{
                 receiveATBConfirm()
-            }    
+            }            
         }
     },[LPIssuccess])
 
