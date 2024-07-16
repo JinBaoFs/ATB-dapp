@@ -166,7 +166,7 @@ export default function Service() {
     const handleReceiveUSDT = async() => {
         if(btnLoading) return
         setBtnLoading(true)
-        setTimeout(()=>{ setBtnLoading(false) },5000)
+        setTimeout(()=>{ setBtnLoading(false) },20000)
         let nowDate = new Date()
         let str = String(nowDate.getDate())
         let usdt_time = localStorage.getItem("usdt_time")
@@ -224,7 +224,7 @@ export default function Service() {
     const handleReceiveATB = async() => {
         if(btnLoading) return
         setBtnLoading(true)
-        setTimeout(()=>{ setBtnLoading(false) },5000)
+        setTimeout(()=>{ setBtnLoading(false) },20000)
 
         let nowDate = new Date()
         let str = String(`${nowDate.getMonth()}${nowDate.getDate()}`)
