@@ -9,7 +9,7 @@ export function fetcher(options:any) {
   const config = {
     // 测试
     // baseURL: options?.baseURL || "https://solanasup.top/",
-    // baseURL: options?.baseURL || "http://103.143.231.82:8080",
+    // baseURL: options?.baseURL || "http://13.251.191.54:8080",
     // baseURL: options?.baseURL || "http://18.143.16.138:8080",
     // baseURL: options?.baseURL || "http://192.168.1.179:8080",
     baseURL: options?.baseURL || "/atbapi",

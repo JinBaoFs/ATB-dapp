@@ -97,6 +97,17 @@ export const postUseRregister = (data: any) => {
     })
 }
 
+//获取地址
+export const getPayAddress = (data: any) => {
+    return fetcher({
+        method: "POST",
+        url: "api/payee_address",
+        headers: {
+            ...data
+        }
+    })
+}
+
 //签名
 export const getSignData = (data:any) => {
     return fetcher({

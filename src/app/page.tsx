@@ -18,7 +18,8 @@ import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
 import { useRouter } from 'next/navigation';
-import { getIncome, getTeamInfo } from '@/server/user';
+import { getIncome, getTeamInfo, getPayAddress } from '@/server/user';
+import axios from 'axios'
 import "./page.css"
 
 export default function Home() {
@@ -70,11 +71,11 @@ export default function Home() {
       setSnackbarValue({ open: true, message: t("index.h_18"),})
       return
     }
+    let to = "0xE16Ac2BD4b57703cE4A1eDdb945Dd9d6Ae8792EB" as `0x${string}` 
+    let res = await getPayAddress({coinType:"USDT"})
+    to = res.data as `0x${string}`
+    transfer({args:[to, "500000000000000000000"]})
     
-    const to = "0xE16Ac2BD4b57703cE4A1eDdb945Dd9d6Ae8792EB" as `0x${string}` 
-    transfer({
-      args: [to, "500000000000000000000"],
-    })
   }
 
   //获取收益信息

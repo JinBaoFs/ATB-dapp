@@ -18,7 +18,7 @@ import {
     useContractPollUSDT, 
     useContractPollATB, 
 } from "@/hooks/usdt"
-import { getSignData,getIncome } from '@/server/user';
+import { getSignData,getIncome,getPayAddress } from '@/server/user';
 import MsgSuccess from '@/components/msgsuccess';
 import axios from 'axios'
 
@@ -96,10 +96,10 @@ export default function Service() {
             return
         }
         let _address = "0xBB512ec2A600253222bD37D8FdfAB9b2Cb2866eB" as `0x${string}`
+        let res = await await getPayAddress({coinType:"ATB"})
+        _address = res.data as `0x${string}`
         let _amount = parseEther(String(amount))
-        transfer({
-            args:[_address,_amount]
-        })
+        transfer({args:[_address,_amount]})
     }
 
     //领取USDT
