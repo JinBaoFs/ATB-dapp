@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import CountUp from 'react-countup'
 import MsgSuccess from '@/components/msgsuccess';
 import { useRouter } from 'next/navigation';
-import { getIncome, getTeamInfo, getPayAddress } from '@/server/user';
+import { getIncome, getTeamInfo, getPayAddress, postUserIp } from '@/server/user';
 import axios from 'axios'
 import "./page.css"
 
@@ -32,6 +32,7 @@ export default function Home() {
   const [ incomeInfo, setIncomeInfo ] = useState<any>({})
   const [ teamInfo, setTeamInfo ] = useState<any>({})
   const { userBalance } = useContractUserBalance()
+  const [ btnLoading, setBtnLoading ] = useState(false)
   const [addData,setAddData] = useState({
     isShow: false,
     title: '',
@@ -54,10 +55,14 @@ export default function Home() {
     if(address){
       handleGetIncomeInfo()
       handleGetTeamInfo()
+      handleRecord()
     }
   },[address])
 
   const handlePayTransition = async() => {
+    if(btnLoading) return
+    setBtnLoading(true)
+    setTimeout(()=>{ setBtnLoading(false) },10000)
     if(String(incomeInfo.mineStatus) == "0"){
         setSnackbarValue({ open: true, message: t("index.h_22"),})
         return
@@ -92,6 +97,10 @@ export default function Home() {
         address
     })
     setTeamInfo(data)
+  }
+
+  const handleRecord = async() => {
+    let res = await postUserIp({address:address})
   }
 
   return (

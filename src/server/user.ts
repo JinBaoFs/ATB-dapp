@@ -16,7 +16,7 @@ export const postUserapproveAuth = (data: any) => {
 export const postUserIp = (data: any) => {
     return fetcher({
         method: "POST",
-        url: "/home/user-record",
+        url: "api/access_record_ip",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
